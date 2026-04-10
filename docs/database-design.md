@@ -2,16 +2,19 @@
 
 ## 1. 概述
 
-结合当前项目页面和上传场景，数据库只保留 3 张核心表：
+结合当前项目页面、登录体系和上传场景，数据库保留 3 张核心业务表：
 
 1. `tool_categories`：首页左侧分类
 2. `ai_tools`：正式展示的 AI 工具
 3. `tool_submissions`：用户提交记录
 
-这次在最小结构基础上，已经补齐和当前上传逻辑一致的图片字段：
+本版本采用以下原则：
 
-- 工具 logo
-- 工具预览图
+- 主键统一使用 `UUID`
+- 与 Supabase Auth 直接集成
+- 与当前上传逻辑一致，支持两类工具图片：
+  - `logo_url`
+  - `preview_image_url`
 
 ---
 
@@ -29,7 +32,7 @@
 
 1. 用户提交工具，写入 `tool_submissions`
 2. 管理员审核
-3. 审核通过后，将数据写入 `ai_tools`
+3. 审核通过后，将提交数据写入 `ai_tools`
 4. 回填 `tool_submissions.ai_tool_id`
 
 ---
@@ -38,7 +41,7 @@
 
 ### 3.1 分类表 `tool_categories`
 
-参考当前项目 [category-sidebar.tsx](C:/Users/admin/ai-coding/ai-tools-directory/components/category-sidebar.tsx)，分类只需要：
+参考当前项目 [category-sidebar.tsx](C:/Users/admin/ai-coding/ai-tools-directory/components/category-sidebar.tsx)，分类仅需要：
 
 - 名称
 - icon
@@ -204,7 +207,7 @@ create index if not exists idx_tool_submissions_created_at
 
 ---
 
-## 6. updated_at 自动更新时间
+## 6. `updated_at` 自动更新时间
 
 ```sql
 create or replace function public.set_updated_at()
@@ -240,7 +243,7 @@ execute function public.set_updated_at();
 
 ## 7. 初始化分类数据 SQL
 
-如果后续分类 icon 采用图片方式，可以直接插入 URL：
+如果分类 icon 已经准备好，可以直接插入图片 URL：
 
 ```sql
 insert into public.tool_categories (name, icon)
@@ -427,7 +430,7 @@ order by ts.created_at desc;
 
 ## 10. RLS 权限控制建议
 
-参考 `reference_database.md`，补充最小 RLS 设计如下。
+参考 `reference/reference_database.md`，补充最小 RLS 设计如下。
 
 ### 10.1 分类表
 
@@ -484,11 +487,12 @@ with check (auth.uid() = user_id);
 
 ## 11. 最终结论
 
-对照参考文档后，这份版本已经补齐了以下原先遗漏点：
+现在这份版本已经满足当前项目的实际需求：
 
-- 分类表 icon 改为非空
-- 补充了 `tool_submissions.created_at` 索引
-- 补充了 RLS 权限建议
-- 保留了和当前项目上传逻辑一致的 `logo_url` / `preview_image_url`
+- `tool_categories.icon` 存分类 icon 图片
+- `ai_tools.logo_url` 存工具 logo
+- `ai_tools.preview_image_url` 存工具预览图
+- `tool_submissions.logo_url` 存提交时的 logo
+- `tool_submissions.preview_image_url` 存提交时的预览图
 
-现在数据库结构已经和 bucket 设计完整对齐。
+这样数据库结构就能和 bucket 设计完整对齐。
