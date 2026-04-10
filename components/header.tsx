@@ -6,6 +6,7 @@ import { HeaderAuthControls } from "@/components/header-auth-controls"
 
 export default async function Header() {
   let userEmail: string | null = null
+  let userName: string | null = null
 
   if (hasSupabaseEnv) {
     const supabase = await createClient()
@@ -14,6 +15,13 @@ export default async function Header() {
     } = await supabase.auth.getUser()
 
     userEmail = user?.email ?? null
+    userName =
+      (typeof user?.user_metadata?.full_name === "string"
+        ? user.user_metadata.full_name
+        : typeof user?.user_metadata?.name === "string"
+          ? user.user_metadata.name
+          : null) ??
+      (user?.email ? user.email.split("@")[0] : null)
   }
 
   return (
@@ -50,7 +58,11 @@ export default async function Header() {
               className="rounded-md border border-input bg-background py-2 pl-8 pr-4 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </div>
-          <HeaderAuthControls enabled={hasSupabaseEnv} userEmail={userEmail} />
+          <HeaderAuthControls
+            enabled={hasSupabaseEnv}
+            initialUserEmail={userEmail}
+            initialUserName={userName}
+          />
         </div>
       </div>
     </header>
