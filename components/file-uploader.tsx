@@ -2,57 +2,139 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Image from "next/image"
+import { Upload, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Upload, X } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { createClient } from "@/lib/supabase/client"
+import { hasSupabaseEnv } from "@/lib/utils"
 
 interface FileUploaderProps {
   value: string
   onChange: (value: string) => void
+  bucket: string
+  pathPrefix: string
   accept?: string
   maxSize?: number
   previewWidth?: number
   previewHeight?: number
 }
 
+function getFileExtension(file: File) {
+  const nameParts = file.name.split(".")
+  const extensionFromName = nameParts.length > 1 ? nameParts.pop()?.toLowerCase() : ""
+
+  if (extensionFromName) {
+    return extensionFromName
+  }
+
+  const mimeExtension = file.type.split("/")[1]?.toLowerCase()
+  return mimeExtension || "png"
+}
+
 export function FileUploader({
   value,
   onChange,
+  bucket,
+  pathPrefix,
   accept = "image/*",
-  maxSize = 1024 * 1024, // 1MB
+  maxSize = 1024 * 1024,
   previewWidth = 200,
   previewHeight = 200,
 }: FileUploaderProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const { toast } = useToast()
   const [isDragging, setIsDragging] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const notifyError = (title: string, description: string) => {
+    toast({
+      title,
+      description,
+      variant: "destructive",
+    })
 
+    if (typeof window !== "undefined") {
+      window.alert(description)
+    }
+  }
+
+  const uploadFile = async (file: File) => {
     if (file.size > maxSize) {
-      toast({
-        title: "文件过大",
-        description: `文件大小不能超过 ${maxSize / (1024 * 1024)}MB`,
-        variant: "destructive",
-      })
+      notifyError("文件过大", `文件大小不能超过 ${(maxSize / (1024 * 1024)).toFixed(0)}MB`)
       return
     }
 
-    // 在实际应用中，这里应该上传文件到服务器或CDN
-    // 这里我们使用本地URL模拟
-    const reader = new FileReader()
-    reader.onload = () => {
-      onChange(reader.result as string)
+    if (!hasSupabaseEnv) {
+      notifyError("上传未启用", "当前环境缺少 Supabase 配置，暂时无法上传图片。")
+      return
     }
-    reader.readAsDataURL(file)
+
+    setIsUploading(true)
+
+    try {
+      const supabase = createClient()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (!user) {
+        notifyError("请先登录", "登录后才能上传图片。")
+        return
+      }
+
+      const extension = getFileExtension(file)
+      const objectPath = `${pathPrefix}/${Date.now()}-${crypto.randomUUID()}.${extension}`
+
+      const { error: uploadError } = await supabase.storage.from(bucket).upload(objectPath, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type || undefined,
+      })
+
+      if (uploadError) {
+        throw uploadError
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from(bucket).getPublicUrl(objectPath)
+
+      onChange(publicUrl)
+
+      toast({
+        title: "上传成功",
+        description: "图片上传完成。",
+      })
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message.includes("row-level security policy")
+          ? "上传被存储权限拦截，请确认已登录，并检查 Supabase Storage 的 bucket policy。"
+          : error instanceof Error
+            ? error.message
+            : "上传失败，请稍后重试。"
+
+      notifyError("上传失败", message)
+    } finally {
+      setIsUploading(false)
+    }
   }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    await uploadFile(file)
+    event.target.value = ""
+  }
+
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault()
     setIsDragging(true)
   }
 
@@ -60,29 +142,16 @@ export function FileUploader({
     setIsDragging(false)
   }
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
+  const handleDrop = async (event: React.DragEvent) => {
+    event.preventDefault()
     setIsDragging(false)
 
-    const file = e.dataTransfer.files[0]
-    if (!file) return
-
-    if (file.size > maxSize) {
-      toast({
-        title: "文件过大",
-        description: `文件大小不能超过 ${maxSize / (1024 * 1024)}MB`,
-        variant: "destructive",
-      })
+    const file = event.dataTransfer.files[0]
+    if (!file) {
       return
     }
 
-    // 在实际应用中，这里应该上传文件到服务器或CDN
-    // 这里我们使用本地URL模拟
-    const reader = new FileReader()
-    reader.onload = () => {
-      onChange(reader.result as string)
-    }
-    reader.readAsDataURL(file)
+    await uploadFile(file)
   }
 
   const handleRemove = () => {
@@ -99,39 +168,44 @@ export function FileUploader({
               height: previewHeight,
               position: "relative",
             }}
-            className="border rounded-md overflow-hidden"
+            className="overflow-hidden rounded-md border"
           >
-            <Image src={value || "/placeholder.svg"} alt="Preview" fill className="object-cover" />
+            <Image src={value} alt="Preview" fill className="object-cover" />
           </div>
           <Button
             type="button"
             variant="destructive"
             size="icon"
-            className="absolute top-2 right-2 h-6 w-6"
+            className="absolute right-2 top-2 h-6 w-6"
             onClick={handleRemove}
+            disabled={isUploading}
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
       ) : (
         <div
-          className={`border-2 border-dashed rounded-md p-6 text-center ${
+          className={`rounded-md border-2 border-dashed p-6 text-center ${
             isDragging ? "border-primary bg-primary/10" : "border-muted-foreground/20"
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <Upload className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-          <p className="text-sm text-muted-foreground mb-2">拖放文件到此处，或</p>
-          <Input type="file" accept={accept} onChange={handleFileChange} className="hidden" id="file-upload" />
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => document.getElementById("file-upload")?.click()}
-          >
-            选择文件
+          <Upload className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
+          <p className="mb-2 text-sm text-muted-foreground">
+            {isUploading ? "图片上传中..." : "拖拽图片到这里，或点击选择文件"}
+          </p>
+          <Input
+            ref={inputRef}
+            type="file"
+            accept={accept}
+            onChange={handleFileChange}
+            className="hidden"
+            disabled={isUploading}
+          />
+          <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()} disabled={isUploading}>
+            {isUploading ? "上传中..." : "选择文件"}
           </Button>
         </div>
       )}

@@ -1,56 +1,105 @@
-"use client"
-
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import Link from "next/link"
+import { redirect } from "next/navigation"
+import { Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Eye } from "lucide-react"
-import Link from "next/link"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { createClient } from "@/lib/supabase/server"
+import { hasSupabaseEnv } from "@/lib/utils"
 
-// 模拟数据
-const submissions = [
-  {
-    id: "1",
-    name: "AI写作助手",
-    slug: "ai-writing-assistant",
-    submittedAt: "2024-04-20T10:30:00Z",
-    status: "pending", // pending, approved
-  },
-  {
-    id: "2",
-    name: "智能图像生成器",
-    slug: "smart-image-generator",
-    submittedAt: "2024-04-15T14:20:00Z",
-    status: "approved",
-  },
-  {
-    id: "3",
-    name: "语音转文字工具",
-    slug: "voice-to-text",
-    submittedAt: "2024-04-10T09:15:00Z",
-    status: "approved",
-  },
-]
+type SubmissionRow = {
+  id: string
+  name: string
+  status: "pending" | "approved" | "rejected" | string
+  created_at: string
+  ai_tool_id: string | null
+  tool:
+    | {
+        slug: string | null
+      }
+    | {
+        slug: string | null
+      }[]
+    | null
+}
 
-export default function SubmissionsPage() {
-  const [userSubmissions, setUserSubmissions] = useState(submissions)
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleString("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString("zh-CN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
+function getStatusBadge(status: SubmissionRow["status"]) {
+  if (status === "approved") {
+    return <Badge>已发布</Badge>
   }
+
+  if (status === "rejected") {
+    return <Badge variant="destructive">未通过</Badge>
+  }
+
+  return <Badge variant="outline">审核中</Badge>
+}
+
+export default async function SubmissionsPage() {
+  if (!hasSupabaseEnv) {
+    return (
+      <div className="rounded-md border px-6 py-12 text-center">
+        <h2 className="mb-2 text-2xl font-bold">我的提交</h2>
+        <p className="text-sm text-muted-foreground">当前未配置数据库连接，暂时无法加载真实提交数据。</p>
+      </div>
+    )
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login?next=/user/submissions")
+  }
+
+  const { data, error } = await supabase
+    .from("tool_submissions")
+    .select(
+      `
+        id,
+        name,
+        status,
+        created_at,
+        ai_tool_id,
+        tool:ai_tools!tool_submissions_ai_tool_id_fkey (
+          slug
+        )
+      `
+    )
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    return (
+      <div>
+        <h2 className="mb-6 text-2xl font-bold">我的提交</h2>
+        <div className="rounded-md border px-6 py-12 text-center text-sm text-muted-foreground">
+          提交记录加载失败，请稍后再试。
+        </div>
+      </div>
+    )
+  }
+
+  const submissions = (data as SubmissionRow[] | null) ?? []
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">我的提交</h2>
+      <h2 className="mb-6 text-2xl font-bold">我的提交</h2>
 
-      {userSubmissions.length > 0 ? (
-        <div className="border rounded-md">
+      {submissions.length > 0 ? (
+        <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -61,34 +110,37 @@ export default function SubmissionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {userSubmissions.map((submission) => (
-                <TableRow key={submission.id}>
-                  <TableCell className="font-medium">{submission.name}</TableCell>
-                  <TableCell>{formatDate(submission.submittedAt)}</TableCell>
-                  <TableCell>
-                    {submission.status === "pending" ? <Badge variant="outline">审核中</Badge> : <Badge>已发布</Badge>}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {submission.status === "approved" ? (
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/tool/${submission.slug}`} target="_blank">
-                          <Eye className="h-4 w-4 mr-1" />
-                          查看
-                        </Link>
-                      </Button>
-                    ) : (
-                      "--"
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {submissions.map((submission) => {
+                const tool = Array.isArray(submission.tool) ? submission.tool[0] : submission.tool
+                const canView = submission.status === "approved" && Boolean(tool?.slug)
+
+                return (
+                  <TableRow key={submission.id}>
+                    <TableCell className="font-medium">{submission.name}</TableCell>
+                    <TableCell>{formatDate(submission.created_at)}</TableCell>
+                    <TableCell>{getStatusBadge(submission.status)}</TableCell>
+                    <TableCell className="text-right">
+                      {canView ? (
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/tool/${tool?.slug}`} target="_blank">
+                            <Eye className="mr-1 h-4 w-4" />
+                            查看
+                          </Link>
+                        </Button>
+                      ) : (
+                        "--"
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </div>
       ) : (
-        <div className="text-center py-12 border rounded-md">
-          <h3 className="text-lg font-medium mb-2">暂无提交记录</h3>
-          <p className="text-muted-foreground mb-6">您还没有提交过任何AI工具</p>
+        <div className="rounded-md border py-12 text-center">
+          <h3 className="mb-2 text-lg font-medium">暂无提交记录</h3>
+          <p className="mb-6 text-muted-foreground">您还没有提交过任何 AI 工具</p>
           <Button asChild>
             <Link href="/user/submit">提交工具</Link>
           </Button>

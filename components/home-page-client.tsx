@@ -5,32 +5,24 @@ import { Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import CategorySidebar from "@/components/category-sidebar"
 import ToolCard from "@/components/tool-card"
-import {
-  categories as legacyCategories,
-  hotTools,
-  newTools,
-  toolsByCategory,
-} from "@/lib/data"
-
-type SidebarCategory = {
-  id: string
-  name: string
-  icon: string
-}
+import type { SidebarCategory, ToolSummary } from "@/lib/ai-tools"
 
 type HomePageClientProps = {
   categories: SidebarCategory[]
+  hotTools: ToolSummary[]
+  newTools: ToolSummary[]
+  toolsByCategory: Record<string, ToolSummary[]>
 }
 
-export default function HomePageClient({ categories }: HomePageClientProps) {
+export default function HomePageClient({
+  categories,
+  hotTools,
+  newTools,
+  toolsByCategory,
+}: HomePageClientProps) {
   const router = useRouter()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
-  const categoryRefs = useRef<{ [key: string]: HTMLElement | null }>({})
-
-  const categorySections = categories.map((category, index) => ({
-    ...category,
-    toolGroupKey: legacyCategories[index]?.id ?? "",
-  }))
+  const categoryRefs = useRef<Record<string, HTMLElement | null>>({})
 
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId)
@@ -67,43 +59,59 @@ export default function HomePageClient({ categories }: HomePageClientProps) {
           <div className="mb-4">
             <h2 className="text-xl font-bold">热门工具</h2>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {hotTools.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
-            ))}
-          </div>
+          {hotTools.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {hotTools.map((tool) => (
+                <ToolCard key={tool.id} tool={tool} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">当前还没有标记为热门的工具。</p>
+          )}
         </section>
 
         <section className="mb-10">
           <div className="mb-4">
             <h2 className="text-xl font-bold">最新收录</h2>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {newTools.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
-            ))}
-          </div>
-        </section>
-
-        {categorySections.map((category) => (
-          <section
-            key={category.id}
-            id={category.id}
-            ref={(el) => {
-              categoryRefs.current[category.id] = el
-            }}
-            className="mb-10"
-          >
-            <div className="mb-4">
-              <h2 className="text-xl font-bold">{category.name}</h2>
-            </div>
+          {newTools.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {(toolsByCategory[category.toolGroupKey] ?? []).map((tool) => (
+              {newTools.map((tool) => (
                 <ToolCard key={tool.id} tool={tool} />
               ))}
             </div>
-          </section>
-        ))}
+          ) : (
+            <p className="text-sm text-muted-foreground">当前还没有标记为最新收录的工具。</p>
+          )}
+        </section>
+
+        {categories.map((category) => {
+          const categoryTools = toolsByCategory[category.id] ?? []
+
+          return (
+            <section
+              key={category.id}
+              id={category.id}
+              ref={(el) => {
+                categoryRefs.current[category.id] = el
+              }}
+              className="mb-10"
+            >
+              <div className="mb-4">
+                <h2 className="text-xl font-bold">{category.name}</h2>
+              </div>
+              {categoryTools.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  {categoryTools.map((tool) => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">这个分类下暂时还没有工具。</p>
+              )}
+            </section>
+          )
+        })}
       </div>
     </div>
   )

@@ -1,12 +1,15 @@
 import Link from "next/link"
-import { Search } from "lucide-react"
-import { hasSupabaseEnv } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/server"
 import { HeaderAuthControls } from "@/components/header-auth-controls"
+import { HeaderSearch } from "@/components/header-search"
+import { getSearchableTools } from "@/lib/ai-tools"
+import { createClient } from "@/lib/supabase/server"
+import { hasSupabaseEnv } from "@/lib/utils"
 
 export default async function Header() {
   let userEmail: string | null = null
   let userName: string | null = null
+
+  const searchableTools = await getSearchableTools()
 
   if (hasSupabaseEnv) {
     const supabase = await createClient()
@@ -50,13 +53,8 @@ export default async function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="relative hidden md:block">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <input
-              type="search"
-              placeholder="搜索 AI 工具..."
-              className="rounded-md border border-input bg-background py-2 pl-8 pr-4 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
+          <div className="hidden md:block">
+            <HeaderSearch tools={searchableTools} />
           </div>
           <HeaderAuthControls
             enabled={hasSupabaseEnv}

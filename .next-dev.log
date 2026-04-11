@@ -1,0 +1,23 @@
+
+> my-v0-project@0.1.0 dev C:\Users\admin\ai-coding\ai-tools-directory
+> next dev
+
+   ▲ Next.js 15.2.4
+   - Local:        http://localhost:3001
+   - Network:      http://198.18.0.1:3001
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 3.6s
+ ✓ Compiled /middleware in 277ms (154 modules)
+ ○ Compiling /tool/[slug] ...
+ ✓ Compiled /tool/[slug] in 3.1s (1408 modules)
+ ✓ Compiled in 401ms (484 modules)
+ GET /tool/doubao%20ai 200 in 4464ms
+ ○ Compiling / ...
+ ✓ Compiled / in 911ms (1428 modules)
+ GET /tool/doubao%20ai 200 in 1453ms
+ GET / 200 in 1554ms
+ ✓ Compiled in 393ms (1442 modules)
+ GET /tool/doubao%20ai 200 in 501ms
+ ELIFECYCLE  Command failed with exit code 4294967295.
