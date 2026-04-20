@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image"
+import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Category {
@@ -35,7 +35,7 @@ export default function CategorySidebar({
   onSubmitClick,
 }: CategorySidebarProps) {
   return (
-    <div className="hidden md:block w-64 border-r bg-background h-[calc(100vh-4rem)] sticky top-16">
+    <div className="sticky top-16 hidden h-[calc(100vh-4rem)] w-64 border-r bg-background md:block">
       <ScrollArea className="h-full py-4">
         <div className="px-3 py-2">
           <h2 className="mb-2 px-4 text-lg font-semibold">分类</h2>
@@ -65,10 +65,10 @@ export default function CategorySidebar({
             ))}
           </div>
         </div>
-        <div className="px-3 py-4 mt-4">
-          <Button className="w-full flex items-center gap-2" onClick={onSubmitClick}>
+        <div className="mt-4 px-3 py-4">
+          <Button className="flex w-full items-center gap-2" onClick={onSubmitClick}>
             <Plus className="h-4 w-4" />
-            提交站点
+            提交条目
           </Button>
         </div>
       </ScrollArea>

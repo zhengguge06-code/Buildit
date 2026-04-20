@@ -12,8 +12,10 @@ type SubmissionRow = {
   name: string
   status: "pending" | "approved" | "rejected" | string
   created_at: string
-  ai_tool_id: string | null
-  tool:
+  channel_type?: string | null
+  tool_id?: string | null
+  ai_tool_id?: string | null
+  tool?:
     | {
         slug: string | null
       }
@@ -45,12 +47,16 @@ function getStatusBadge(status: SubmissionRow["status"]) {
   return <Badge variant="outline">审核中</Badge>
 }
 
+function getChannelLabel(channelType?: string | null) {
+  return channelType === "vibe-products" ? "Vibe 产品" : "Vibe 工具"
+}
+
 export default async function SubmissionsPage() {
   if (!hasSupabaseEnv) {
     return (
       <div className="rounded-md border px-6 py-12 text-center">
         <h2 className="mb-2 text-2xl font-bold">我的提交</h2>
-        <p className="text-sm text-muted-foreground">当前未配置数据库连接，暂时无法加载真实提交数据。</p>
+        <p className="text-sm text-muted-foreground">当前未配置数据库连接，暂时无法加载真实提交记录。</p>
       </div>
     )
   }
@@ -64,7 +70,7 @@ export default async function SubmissionsPage() {
     redirect("/auth/login?next=/user/submissions")
   }
 
-  const { data, error } = await supabase
+  const nextResponse = await supabase
     .from("tool_submissions")
     .select(
       `
@@ -72,14 +78,40 @@ export default async function SubmissionsPage() {
         name,
         status,
         created_at,
-        ai_tool_id,
-        tool:ai_tools!tool_submissions_ai_tool_id_fkey (
+        channel_type,
+        tool_id,
+        tool:tools!tool_submissions_tool_id_fkey (
           slug
         )
       `
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
+
+  let submissions = (nextResponse.data as SubmissionRow[] | null) ?? []
+  let error = nextResponse.error
+
+  if (error) {
+    const legacyResponse = await supabase
+      .from("tool_submissions")
+      .select(
+        `
+          id,
+          name,
+          status,
+          created_at,
+          ai_tool_id,
+          tool:ai_tools!tool_submissions_ai_tool_id_fkey (
+            slug
+          )
+        `
+      )
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+
+    submissions = (legacyResponse.data as SubmissionRow[] | null) ?? []
+    error = legacyResponse.error
+  }
 
   if (error) {
     return (
@@ -92,8 +124,6 @@ export default async function SubmissionsPage() {
     )
   }
 
-  const submissions = (data as SubmissionRow[] | null) ?? []
-
   return (
     <div>
       <h2 className="mb-6 text-2xl font-bold">我的提交</h2>
@@ -103,7 +133,8 @@ export default async function SubmissionsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>工具名称</TableHead>
+                <TableHead>名称</TableHead>
+                <TableHead>所属频道</TableHead>
                 <TableHead>提交时间</TableHead>
                 <TableHead>状态</TableHead>
                 <TableHead className="text-right">操作</TableHead>
@@ -117,6 +148,7 @@ export default async function SubmissionsPage() {
                 return (
                   <TableRow key={submission.id}>
                     <TableCell className="font-medium">{submission.name}</TableCell>
+                    <TableCell>{getChannelLabel(submission.channel_type)}</TableCell>
                     <TableCell>{formatDate(submission.created_at)}</TableCell>
                     <TableCell>{getStatusBadge(submission.status)}</TableCell>
                     <TableCell className="text-right">
@@ -140,9 +172,9 @@ export default async function SubmissionsPage() {
       ) : (
         <div className="rounded-md border py-12 text-center">
           <h3 className="mb-2 text-lg font-medium">暂无提交记录</h3>
-          <p className="mb-6 text-muted-foreground">您还没有提交过任何 AI 工具</p>
+          <p className="mb-6 text-muted-foreground">你还没有提交过任何条目。</p>
           <Button asChild>
-            <Link href="/user/submit">提交工具</Link>
+            <Link href="/user/submit">提交条目</Link>
           </Button>
         </div>
       )}

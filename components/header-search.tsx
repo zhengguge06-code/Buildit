@@ -27,7 +27,7 @@ export function HeaderSearch({ tools }: HeaderSearchProps) {
       ? []
       : tools
           .filter((tool) => {
-            const haystack = `${tool.name} ${tool.description} ${tool.category} ${tool.slug}`.toLowerCase()
+            const haystack = `${tool.name} ${tool.description} ${tool.category} ${tool.slug} ${tool.channelLabel}`.toLowerCase()
             return haystack.includes(normalizedKeyword)
           })
           .slice(0, 6)
@@ -64,7 +64,7 @@ export function HeaderSearch({ tools }: HeaderSearchProps) {
         <Input
           type="search"
           value={keyword}
-          placeholder="搜索 AI 工具..."
+          placeholder="搜索工具、产品和分类..."
           className="pl-8"
           onFocus={() => setIsOpen(true)}
           onChange={(event) => {
@@ -90,13 +90,13 @@ export function HeaderSearch({ tools }: HeaderSearchProps) {
                 >
                   <div className="text-sm font-medium">{tool.name}</div>
                   <div className="line-clamp-1 text-xs text-muted-foreground">
-                    {tool.category} | {tool.description}
+                    {tool.channelLabel} · {tool.category} · {tool.description}
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="px-3 py-3 text-sm text-muted-foreground">没有找到匹配的工具</div>
+            <div className="px-3 py-3 text-sm text-muted-foreground">没有找到匹配的条目</div>
           )}
         </div>
       ) : null}

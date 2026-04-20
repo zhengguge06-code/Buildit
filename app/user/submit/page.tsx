@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -17,21 +17,20 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
+import type { ChannelType } from "@/lib/ai-tools"
+import { fallbackCategories } from "@/lib/data"
 import { createClient } from "@/lib/supabase/client"
 import { hasSupabaseEnv } from "@/lib/utils"
 
 const formSchema = z.object({
+  channelType: z.enum(["vibe-tools", "vibe-products"], {
+    message: "请选择投稿频道。",
+  }),
   name: z.string().min(2, {
-    message: "工具名称至少需要 2 个字符。",
+    message: "名称至少需要 2 个字符。",
   }),
   slug: z
     .string()
@@ -50,10 +49,10 @@ const formSchema = z.object({
   description: z
     .string()
     .min(10, {
-      message: "工具简介至少需要 10 个字符。",
+      message: "简介至少需要 10 个字符。",
     })
     .max(200, {
-      message: "工具简介不能超过 200 个字符。",
+      message: "简介不能超过 200 个字符。",
     }),
   fullDescription: z.string().min(50, {
     message: "详细介绍至少需要 50 个字符。",
@@ -62,16 +61,18 @@ const formSchema = z.object({
     message: "请上传 Logo。",
   }),
   previewImageUrl: z.string().min(1, {
-    message: "请上传工具预览图。",
+    message: "请上传预览图。",
   }),
 })
 
 type CategoryOption = {
   id: string
   name: string
+  channelType: ChannelType
 }
 
-const defaultValues = {
+const defaultValues: z.infer<typeof formSchema> = {
+  channelType: "vibe-tools",
   name: "",
   slug: "",
   websiteUrl: "",
@@ -80,6 +81,20 @@ const defaultValues = {
   fullDescription: "",
   logoUrl: "",
   previewImageUrl: "",
+}
+
+function normalizeChannelType(value: string | null | undefined): ChannelType {
+  return value === "vibe-products" ? "vibe-products" : "vibe-tools"
+}
+
+function getChannelLabel(channelType: ChannelType) {
+  return channelType === "vibe-products" ? "Vibe 产品" : "Vibe 工具"
+}
+
+function getChannelHint(channelType: ChannelType) {
+  return channelType === "vibe-products"
+    ? "你提交的是可供参考的真实产品案例。"
+    : "你提交的是用来构建产品的基础设施。"
 }
 
 export default function SubmitPage() {
@@ -95,12 +110,26 @@ export default function SubmitPage() {
     defaultValues,
   })
 
+  const selectedChannelType = form.watch("channelType")
+
+  const visibleCategories = useMemo(
+    () => categories.filter((category) => category.channelType === selectedChannelType),
+    [categories, selectedChannelType]
+  )
+
   useEffect(() => {
     let isMounted = true
 
     const initializePage = async () => {
       if (!hasSupabaseEnv) {
         if (isMounted) {
+          setCategories(
+            fallbackCategories.map((category) => ({
+              id: category.id,
+              name: category.name,
+              channelType: normalizeChannelType(category.channelType),
+            }))
+          )
           setIsCheckingAuth(false)
           setIsLoadingCategories(false)
         }
@@ -108,50 +137,83 @@ export default function SubmitPage() {
       }
 
       const supabase = createClient()
-      const [
-        {
-          data: { user },
-        },
-        categoryResponse,
-      ] = await Promise.all([
-        supabase.auth.getUser(),
-        supabase.from("tool_categories").select("id, name").order("created_at", { ascending: true }),
-      ])
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
 
       if (!user) {
         router.replace(`/auth/login?next=${encodeURIComponent("/user/submit")}`)
         return
       }
 
-      if (categoryResponse.error) {
-        toast({
-          title: "分类加载失败",
-          description: categoryResponse.error.message,
-          variant: "destructive",
-        })
+      const categoryResponse = await supabase
+        .from("tool_categories")
+        .select("id, name, channel_type")
+        .order("created_at", { ascending: true })
+
+      let categoryOptions: CategoryOption[] = []
+
+      if (!categoryResponse.error && categoryResponse.data) {
+        categoryOptions = (categoryResponse.data as { id: string; name: string; channel_type?: string | null }[]).map(
+          (category) => ({
+            id: category.id,
+            name: category.name,
+            channelType: normalizeChannelType(category.channel_type),
+          })
+        )
+      } else {
+        const legacyResponse = await supabase.from("tool_categories").select("id, name").order("created_at", { ascending: true })
+
+        if (!legacyResponse.error && legacyResponse.data) {
+          categoryOptions = (legacyResponse.data as { id: string; name: string }[]).map((category) => ({
+            id: category.id,
+            name: category.name,
+            channelType: "vibe-tools",
+          }))
+        } else {
+          toast({
+            title: "分类加载失败",
+            description: categoryResponse.error?.message || legacyResponse.error?.message || "暂时无法加载分类。",
+            variant: "destructive",
+          })
+        }
       }
 
       if (!isMounted) {
         return
       }
 
-      setCategories(categoryResponse.data ?? [])
+      setCategories(categoryOptions)
       setIsCheckingAuth(false)
       setIsLoadingCategories(false)
     }
 
-    initializePage()
+    void initializePage()
 
     return () => {
       isMounted = false
     }
   }, [router, toast])
 
+  useEffect(() => {
+    const currentCategoryId = form.getValues("categoryId")
+
+    if (!currentCategoryId) {
+      return
+    }
+
+    const isValidCategory = visibleCategories.some((category) => category.id === currentCategoryId)
+
+    if (!isValidCategory) {
+      form.setValue("categoryId", "")
+    }
+  }, [form, selectedChannelType, visibleCategories])
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!hasSupabaseEnv) {
       toast({
         title: "提交未启用",
-        description: "当前环境缺少 Supabase 配置，暂时无法提交。",
+        description: "当前环境缺少数据库配置，暂时无法提交。",
         variant: "destructive",
       })
       return
@@ -170,7 +232,8 @@ export default function SubmitPage() {
         return
       }
 
-      const { error } = await supabase.from("tool_submissions").insert({
+      const insertPayload = {
+        channel_type: values.channelType,
         name: values.name,
         slug: values.slug,
         description: values.description,
@@ -180,7 +243,20 @@ export default function SubmitPage() {
         preview_image_url: values.previewImageUrl,
         category_id: values.categoryId,
         user_id: user.id,
-      })
+      }
+
+      let error: Error | null = null
+
+      const nextInsert = await supabase.from("tool_submissions").insert(insertPayload)
+
+      if (nextInsert.error) {
+        const legacyInsert = await supabase.from("tool_submissions").insert({
+          ...insertPayload,
+          channel_type: undefined,
+        })
+
+        error = legacyInsert.error
+      }
 
       if (error) {
         throw error
@@ -188,7 +264,7 @@ export default function SubmitPage() {
 
       toast({
         title: "提交成功",
-        description: `${values.name} 已提交，等待管理员审核。`,
+        description: `${values.name} 已提交到 ${getChannelLabel(values.channelType)}，等待管理员审核。`,
       })
 
       router.push("/user/submissions")
@@ -215,16 +291,47 @@ export default function SubmitPage() {
   return (
     <div>
       <div className="max-w-3xl">
+        <div className="mb-8 rounded-[1.5rem] border border-black/10 bg-white/75 p-6">
+          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Submission</p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">提交条目</h1>
+          <p className="mt-3 text-sm leading-7 text-muted-foreground">
+            先选频道，再选分类，再填写信息。这样频道归属、分类浏览和后续审核都会更清晰。
+          </p>
+        </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="channelType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>投稿频道</FormLabel>
+                  <Select onValueChange={(value) => field.onChange(normalizeChannelType(value))} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="选择投稿频道" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="vibe-tools">Vibe 工具</SelectItem>
+                      <SelectItem value="vibe-products">Vibe 产品</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>{getChannelHint(selectedChannelType)}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>工具名称</FormLabel>
+                  <FormLabel>名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="例如：AI 写作助手" {...field} />
+                    <Input placeholder="例如：Cursor 或 waiby" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -236,11 +343,11 @@ export default function SubmitPage() {
               name="slug"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>工具 Slug</FormLabel>
+                  <FormLabel>Slug</FormLabel>
                   <FormControl>
-                    <Input placeholder="例如：ai-writing-assistant" {...field} />
+                    <Input placeholder="例如：cursor 或 vibe-product-example" {...field} />
                   </FormControl>
-                  <FormDescription>仅支持小写字母、数字和连字符，后续可作为详情页链接标识。</FormDescription>
+                  <FormDescription>只支持小写字母、数字和连字符，后续会作为详情页链接标识。</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -273,13 +380,14 @@ export default function SubmitPage() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
+                      {visibleCategories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormDescription>当前只显示 {getChannelLabel(selectedChannelType)} 的分类。</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -290,10 +398,10 @@ export default function SubmitPage() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>工具简介</FormLabel>
+                  <FormLabel>简介</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="简要描述这个工具的主要能力和适用场景。"
+                      placeholder="简要描述这个条目的主要能力、用途或它为什么值得参考。"
                       className="resize-none"
                       {...field}
                     />
@@ -311,7 +419,7 @@ export default function SubmitPage() {
                   <FormLabel>详细介绍</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="详细介绍工具能力、亮点、使用方式和适用人群。"
+                      placeholder="详细介绍能力、亮点、适用人群、使用方式或你觉得值得看的地方。"
                       className="min-h-[440px]"
                       {...field}
                     />
@@ -326,7 +434,7 @@ export default function SubmitPage() {
               name="logoUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>工具 Logo</FormLabel>
+                  <FormLabel>Logo</FormLabel>
                   <FormControl>
                     <FileUploader
                       value={field.value}
@@ -350,7 +458,7 @@ export default function SubmitPage() {
               name="previewImageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>工具预览图</FormLabel>
+                  <FormLabel>预览图</FormLabel>
                   <FormControl>
                     <FileUploader
                       value={field.value}
@@ -369,8 +477,8 @@ export default function SubmitPage() {
               )}
             />
 
-            <Button type="submit" disabled={isSubmitting || isLoadingCategories || categories.length === 0}>
-              {isSubmitting ? "提交中..." : "提交工具"}
+            <Button type="submit" disabled={isSubmitting || isLoadingCategories || visibleCategories.length === 0}>
+              {isSubmitting ? "提交中..." : "提交条目"}
             </Button>
           </form>
         </Form>

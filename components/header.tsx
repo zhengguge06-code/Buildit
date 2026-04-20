@@ -28,11 +28,11 @@ export default async function Header() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b bg-background">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-6">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-black/10 bg-background/90 backdrop-blur">
+      <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
+        <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="text-purple-600">
+            <div className="text-[#1f6f78]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -48,8 +48,17 @@ export default async function Header() {
                 <path d="M7 7h.01" />
               </svg>
             </div>
-            <span className="text-xl font-bold">AI 工具集</span>
+            <span className="text-xl font-bold tracking-[-0.03em]">Vibe Hub</span>
           </Link>
+
+          <nav className="hidden items-center gap-5 md:flex">
+            <Link href="/vibe-tools" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              Vibe 工具
+            </Link>
+            <Link href="/vibe-products" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              Vibe 产品
+            </Link>
+          </nav>
         </div>
 
         <div className="flex items-center gap-4">

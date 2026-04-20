@@ -1,255 +1,215 @@
-// 模拟数据，实际应用中应该从数据库获取
+const toolDetailTemplate = (name: string, summary: string, highlights: string[]) => `# ${name}
 
-export const categories = [
-  { id: "writing", name: "AI写作", icon: "✍️" },
-  { id: "image", name: "图像生成", icon: "🖼️" },
-  { id: "video", name: "视频制作", icon: "🎬" },
-  { id: "audio", name: "语音处理", icon: "🎵" },
-  { id: "coding", name: "代码开发", icon: "💻" },
-  { id: "design", name: "设计工具", icon: "🎨" },
-  { id: "productivity", name: "效率工具", icon: "⚡" },
-  { id: "education", name: "教育学习", icon: "📚" },
-  { id: "business", name: "商业应用", icon: "💼" },
-]
+${summary}
 
-export const hotTools = [
+## 适合谁
+- 想尽快判断这个条目是否值得收藏的人
+- 需要了解主要能力、适用场景和上手方式的人
+- 希望在同类产品里快速做选择的人
+
+## 主要亮点
+
+${highlights.map((item) => `- ${item}`).join("\n")}
+
+## 使用建议
+
+1. 先访问官网或产品页了解最新功能与定价边界。
+2. 再结合你的工作流判断它更适合原型验证、开发协作，还是内容生产。
+3. 如果准备长期使用，建议同时关注它的导出能力、团队协作和稳定性。`
+
+export const fallbackCategories = [
+  { id: "vibe-prototyping", name: "灵感原型", icon: "💡", channelType: "vibe-tools" },
+  { id: "vibe-pages", name: "页面生成", icon: "🪄", channelType: "vibe-tools" },
+  { id: "vibe-fullstack", name: "全栈构建", icon: "🧱", channelType: "vibe-tools" },
+  { id: "vibe-ide", name: "AI 编程环境", icon: "⌘", channelType: "vibe-tools" },
+  { id: "vibe-agent-coding", name: "Agent 编程", icon: "🤖", channelType: "vibe-tools" },
+  { id: "vibe-backend", name: "数据后端", icon: "🗄️", channelType: "vibe-tools" },
+  { id: "vibe-automation", name: "自动化流程", icon: "🔄", channelType: "vibe-tools" },
+  { id: "vibe-deploy", name: "部署发布", icon: "🚀", channelType: "vibe-tools" },
+  { id: "product-saas", name: "SaaS 产品", icon: "📦", channelType: "vibe-products" },
+  { id: "product-directory", name: "导航站", icon: "🧭", channelType: "vibe-products" },
+  { id: "product-landing", name: "落地页", icon: "🪧", channelType: "vibe-products" },
+  { id: "product-portfolio", name: "作品集", icon: "🗂️", channelType: "vibe-products" },
+  { id: "product-ai-webapp", name: "AI Web 应用", icon: "🌐", channelType: "vibe-products" },
+  { id: "product-content", name: "内容工具", icon: "✍️", channelType: "vibe-products" },
+  { id: "product-productivity", name: "效率产品", icon: "⚡", channelType: "vibe-products" },
+  { id: "product-community", name: "社区平台", icon: "👥", channelType: "vibe-products" },
+] as const
+
+export const fallbackTools = [
   {
-    id: "1",
-    name: "豆包",
-    slug: "doubao",
-    description: "字节跳动推出的免费AI智能助手",
-    logo: "/stylized-bean-logo.png",
-    category: "writing",
-    isHot: true,
+    id: "tool-cursor",
+    name: "Cursor",
+    slug: "cursor",
+    description: "最常被提到的 AI 编程工具之一，适合以代码为中心的 Vibe Coding 工作流。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "vibe-ide",
+    channelType: "vibe-tools",
+    websiteUrl: "https://cursor.com",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Cursor", "一款围绕 AI 编程协作体验打造的 IDE 产品。", [
+      "适合重度代码编辑、重构和连续开发",
+      "在 Vibe Coding 语境下讨论度很高",
+      "从需求到实现的协作链路比较顺滑",
+    ]),
+    publishedAt: "2026-04-19T02:00:00.000Z",
+    weeklyViews: 213,
+    status: "published",
   },
   {
-    id: "2",
-    name: "吐司AI",
-    slug: "trae",
-    description: "专为视频创作者推出的免费AI编辑工具",
-    logo: "/abstract-geometric-logo.png",
-    category: "video",
-    isHot: true,
+    id: "tool-lovable",
+    name: "Lovable",
+    slug: "lovable",
+    description: "用自然语言快速搭产品原型和 Web 应用，适合非传统开发者快速试错。",
+    logo: "/placeholder-logo.png",
+    categoryId: "vibe-fullstack",
+    channelType: "vibe-tools",
+    websiteUrl: "https://lovable.dev",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Lovable", "一款强调自然语言生成应用原型与页面的构建工具。", [
+      "适合快速验证产品想法",
+      "更偏向原型和轻量 Web 应用生成",
+      "很适合非工程背景用户参与产品搭建",
+    ]),
+    publishedAt: "2026-04-17T05:00:00.000Z",
+    weeklyViews: 164,
+    status: "published",
   },
   {
-    id: "3",
-    name: "AIPPT",
-    slug: "aippt",
-    description: "AI快速生成高质量PPT",
-    logo: "/abstract-network-logo.png",
-    category: "productivity",
-    isHot: true,
+    id: "tool-bolt",
+    name: "Bolt",
+    slug: "bolt",
+    description: "强调在线生成、运行和修改应用，适合快速迭代 MVP。",
+    logo: "/placeholder.svg",
+    categoryId: "vibe-pages",
+    channelType: "vibe-tools",
+    websiteUrl: "https://bolt.new",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Bolt", "一款强调即时生成、即时运行、即时修改的在线构建工具。", [
+      "适合快速生成 MVP 和页面实验",
+      "像一个可以立刻运行的产品沙盒",
+      "适合做短链路设计验证",
+    ]),
+    publishedAt: "2026-04-13T08:30:00.000Z",
+    weeklyViews: 137,
+    status: "published",
   },
   {
-    id: "4",
-    name: "秘塔AI搜索",
-    slug: "meta-search",
-    description: "最好用的AI搜索工具，没有广告",
-    logo: "/abstract-search-icon.png",
-    category: "productivity",
-    isHot: true,
-  },
-]
-
-export const newTools = [
-  {
-    id: "5",
-    name: "讯飞文档",
-    slug: "xunfei-doc",
-    description: "一键生成PPT和Word",
-    logo: "/xunfei-document-icon.png",
-    category: "productivity",
-    isNew: true,
+    id: "tool-supabase",
+    name: "Supabase",
+    slug: "supabase",
+    description: "适合做登录、数据库、对象存储和实时能力的后端底座。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "vibe-backend",
+    channelType: "vibe-tools",
+    websiteUrl: "https://supabase.com",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Supabase", "一套适合中小团队快速起步的后端基础设施组合。", [
+      "数据库、鉴权、存储和 Edge Functions 能力集中",
+      "适合和生成式前端一起搭配",
+      "很适合快速上线 MVP",
+    ]),
+    publishedAt: "2026-04-11T08:00:00.000Z",
+    weeklyViews: 102,
+    status: "published",
   },
   {
-    id: "6",
-    name: "Coze",
-    slug: "coze",
-    description: "海量AI模型免费用，已接入ChatGPT",
-    logo: "/abstract-interconnectedness.png",
-    category: "productivity",
-    isNew: true,
+    id: "tool-n8n",
+    name: "n8n",
+    slug: "n8n",
+    description: "把 AI、Webhook 和第三方服务串起来的自动化工作流工具。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "vibe-automation",
+    channelType: "vibe-tools",
+    websiteUrl: "https://n8n.io",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("n8n", "一款适合把 AI 流程、表单和通知系统串联起来的自动化平台。", [
+      "适合快速验证 Agent 工作流",
+      "连接外部服务的能力很强",
+      "对非纯工程团队也比较友好",
+    ]),
+    publishedAt: "2026-04-08T07:20:00.000Z",
+    weeklyViews: 88,
+    status: "published",
   },
   {
-    id: "7",
-    name: "Z.ai",
-    slug: "zai",
-    description: "智谱面向全球推出的最新AI模型",
-    logo: "/abstract-zai.png",
-    category: "writing",
-    isNew: true,
+    id: "tool-vercel",
+    name: "Vercel",
+    slug: "vercel",
+    description: "适合前端产品的部署发布与预览协作，和生成式开发流程搭配顺滑。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "vibe-deploy",
+    channelType: "vibe-tools",
+    websiteUrl: "https://vercel.com",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Vercel", "一款适合快速部署前端产品和 AI Web 应用的发布平台。", [
+      "预览环境和上线链路很顺",
+      "适合快节奏试错和产品迭代",
+      "和现代 React 技术栈兼容度高",
+    ]),
+    publishedAt: "2026-04-06T06:30:00.000Z",
+    weeklyViews: 59,
+    status: "published",
   },
   {
-    id: "8",
-    name: "能力方舟",
-    slug: "ark",
-    description: "应用共创平台，提供开发套件",
-    logo: "/placeholder.svg?height=200&width=200&query=ark logo",
-    category: "coding",
-    isNew: true,
+    id: "product-shipfast",
+    name: "ShipFast",
+    slug: "shipfast",
+    description: "典型的独立开发者产品模板站，适合参考如何包装和售卖 AI 产品。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "product-saas",
+    channelType: "vibe-products",
+    websiteUrl: "https://shipfa.st",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("ShipFast", "一个围绕快速上线 SaaS 的产品化案例。", [
+      "适合参考独立开发产品的销售表达",
+      "文案、结构和价格引导都很直接",
+      "很适合作为 SaaS 落地页灵感样本",
+    ]),
+    publishedAt: "2026-04-18T08:00:00.000Z",
+    weeklyViews: 141,
+    status: "published",
   },
-]
+  {
+    id: "product-waiby",
+    name: "waiby",
+    slug: "waiby",
+    description: "以精选案例和工具内容为主的导航站，适合参考信息架构和收录方式。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "product-directory",
+    channelType: "vibe-products",
+    websiteUrl: "https://waiby.me",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("waiby", "一个很适合参考内容组织方式的导航型产品。", [
+      "适合观察频道入口和目录页结构",
+      "案例收录思路清晰",
+      "适合作为整合站灵感来源",
+    ]),
+    publishedAt: "2026-04-16T03:00:00.000Z",
+    weeklyViews: 126,
+    status: "published",
+  },
+  {
+    id: "product-gpts-works",
+    name: "GPTs Works",
+    slug: "gpts-works",
+    description: "偏展示型的 AI Web 应用集合，适合参考内容呈现和功能包装。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "product-ai-webapp",
+    channelType: "vibe-products",
+    websiteUrl: "https://gpts.works",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("GPTs Works", "一个值得参考展示型 AI Web 应用表达的案例。", [
+      "适合观察产品列表页的讲故事方式",
+      "适合参考产品定位呈现",
+      "更偏灵感启发而非工具底座",
+    ]),
+    publishedAt: "2026-04-12T09:00:00.000Z",
+    weeklyViews: 78,
+    status: "published",
+  },
+] as const
 
-// 按分类组织工具
-export const toolsByCategory: { [key: string]: any[] } = {
-  writing: [
-    {
-      id: "1",
-      name: "豆包",
-      slug: "doubao",
-      description: "字节跳动推出的免费AI智能助手",
-      logo: "/stylized-bean-logo.png",
-      category: "writing",
-      isHot: true,
-    },
-    {
-      id: "7",
-      name: "Z.ai",
-      slug: "zai",
-      description: "智谱面向全球推出的最新AI模型",
-      logo: "/abstract-zai.png",
-      category: "writing",
-      isNew: true,
-    },
-    {
-      id: "9",
-      name: "讯飞星火",
-      slug: "xunfei-spark",
-      description: "科大讯飞推出的大语言模型",
-      logo: "/placeholder.svg?height=200&width=200&query=xunfei spark logo",
-      category: "writing",
-    },
-  ],
-  image: [
-    {
-      id: "10",
-      name: "美图设计室",
-      slug: "meitu-design",
-      description: "AI图像创作和设计平台",
-      logo: "/placeholder.svg?height=200&width=200&query=meitu design logo",
-      category: "image",
-    },
-    {
-      id: "11",
-      name: "稿定设计",
-      slug: "gaoding-design",
-      description: "一站式AI设计与灵感创作平台",
-      logo: "/placeholder.svg?height=200&width=200&query=gaoding design logo",
-      category: "image",
-    },
-  ],
-  video: [
-    {
-      id: "2",
-      name: "吐司AI",
-      slug: "trae",
-      description: "专为视频创作者推出的免费AI编辑工具",
-      logo: "/abstract-geometric-logo.png",
-      category: "video",
-      isHot: true,
-    },
-  ],
-  productivity: [
-    {
-      id: "3",
-      name: "AIPPT",
-      slug: "aippt",
-      description: "AI快速生成高质量PPT",
-      logo: "/abstract-network-logo.png",
-      category: "productivity",
-      isHot: true,
-    },
-    {
-      id: "4",
-      name: "秘塔AI搜索",
-      slug: "meta-search",
-      description: "最好用的AI搜索工具，没有广告",
-      logo: "/abstract-search-icon.png",
-      category: "productivity",
-      isHot: true,
-    },
-    {
-      id: "5",
-      name: "讯飞文档",
-      slug: "xunfei-doc",
-      description: "一键生成PPT和Word",
-      logo: "/xunfei-document-icon.png",
-      category: "productivity",
-      isNew: true,
-    },
-    {
-      id: "6",
-      name: "Coze",
-      slug: "coze",
-      description: "海量AI模型免费用，已接入ChatGPT",
-      logo: "/abstract-interconnectedness.png",
-      category: "productivity",
-      isNew: true,
-    },
-  ],
-  coding: [
-    {
-      id: "8",
-      name: "能力方舟",
-      slug: "ark",
-      description: "应用共创平台，提供开发套件",
-      logo: "/placeholder.svg?height=200&width=200&query=ark logo",
-      category: "coding",
-      isNew: true,
-    },
-  ],
-}
-
-// 获取工具详情
-export function getToolBySlug(slug: string) {
-  // 合并所有工具
-  const allTools = [...hotTools, ...newTools, ...Object.values(toolsByCategory).flat()]
-
-  // 去重
-  const uniqueTools = allTools.filter((tool, index, self) => index === self.findIndex((t) => t.id === tool.id))
-
-  // 查找匹配的工具
-  const tool = uniqueTools.find((tool) => tool.slug === slug)
-
-  if (!tool) return null
-
-  // 添加额外的详细信息
-  return {
-    ...tool,
-    url: `https://example.com/${tool.slug}`,
-    coverImage: `/placeholder.svg?height=400&width=1200&query=${tool.name} cover image`,
-    content: `<p>${tool.name}是一款强大的AI工具，提供了丰富的功能和简单的操作界面。</p>
-              <h2>主要功能</h2>
-              <ul>
-                <li>功能1：详细描述</li>
-                <li>功能2：详细描述</li>
-                <li>功能3：详细描述</li>
-              </ul>
-              <h2>使用场景</h2>
-              <p>适用于各种场景的详细描述...</p>
-              
-              <h2>常见问题</h2>
-              <h3>如何开始使用这个工具？</h3>
-              <p>注册账号后，您可以直接访问工具主页开始使用。我们提供了详细的新手教程帮助您快速上手。</p>
-              
-              <h3>这个工具是免费的吗？</h3>
-              <p>我们提供基础功能的免费使用，高级功能需要付费订阅。详细的价格方案请参考官网。</p>
-              
-              <h3>如何联系客服？</h3>
-              <p>您可以通过官网的在线客服或发送邮件至support@example.com联系我们的客服团队。</p>`,
-    qa: [
-      {
-        question: "如何开始使用这个工具？",
-        answer: "注册账号后，您可以直接访问工具主页开始使用。我们提供了详细的新手教程帮助您快速上手。",
-      },
-      {
-        question: "这个工具是免费的吗？",
-        answer: "我们提供基础功能的免费使用，高级功能需要付费订阅。详细的价格方案请参考官网。",
-      },
-      {
-        question: "如何联系客服？",
-        answer: "您可以通过官网的在线客服或发送邮件至support@example.com联系我们的客服团队。",
-      },
-    ],
-  }
+export function getFallbackToolBySlug(slug: string) {
+  return fallbackTools.find((tool) => tool.slug === slug) ?? null
 }
