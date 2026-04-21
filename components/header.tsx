@@ -28,40 +28,52 @@ export default async function Header() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-black/10 bg-background/90 backdrop-blur">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/50 bg-background/75 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="text-[#1f6f78]">
+          <Link href="/" className="group flex items-center gap-2.5">
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-warm-sm transition-transform duration-300 group-hover:-rotate-6">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="2.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" />
-                <path d="M7 7h.01" />
+                <path d="M5 3v18" />
+                <path d="M19 3v18" />
+                <path d="M5 12h14" />
+                <circle cx="12" cy="12" r="2.5" fill="currentColor" />
               </svg>
             </div>
-            <span className="text-xl font-bold tracking-[-0.03em]">Vibe Hub</span>
+            <span className="font-serif text-xl font-semibold tracking-tight text-foreground">
+              Vibe Hub
+            </span>
           </Link>
 
-          <nav className="hidden items-center gap-5 md:flex">
-            <Link href="/vibe-tools" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <nav className="hidden items-center gap-1 md:flex">
+            <Link
+              href="/vibe-tools"
+              className="group relative rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
               Vibe 工具
+              <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
-            <Link href="/vibe-products" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link
+              href="/vibe-products"
+              className="group relative rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
               Vibe 产品
+              <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           </nav>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="hidden md:block">
             <HeaderSearch tools={searchableTools} />
           </div>

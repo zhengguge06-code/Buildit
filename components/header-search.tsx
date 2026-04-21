@@ -75,28 +75,28 @@ export function HeaderSearch({ tools }: HeaderSearchProps) {
       </form>
 
       {isOpen && normalizedKeyword.length > 0 ? (
-        <div className="absolute top-12 z-50 w-full rounded-md border bg-background shadow-md">
+        <div className="absolute top-12 z-50 w-full overflow-hidden rounded-2xl border border-border/70 bg-card shadow-warm-lg">
           {results.length > 0 ? (
-            <div className="py-2">
+            <div className="py-1.5">
               {results.map((tool) => (
                 <Link
                   key={tool.id}
                   href={`/tool/${tool.slug}`}
-                  className="block px-3 py-2 hover:bg-muted"
+                  className="block px-4 py-2.5 transition-colors hover:bg-primary/8"
                   onClick={() => {
                     setIsOpen(false)
                     setKeyword("")
                   }}
                 >
-                  <div className="text-sm font-medium">{tool.name}</div>
-                  <div className="line-clamp-1 text-xs text-muted-foreground">
-                    {tool.channelLabel} · {tool.category} · {tool.description}
+                  <div className="text-sm font-medium text-foreground">{tool.name}</div>
+                  <div className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+                    <span className="text-primary">{tool.channelLabel}</span> · {tool.category} · {tool.description}
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="px-3 py-3 text-sm text-muted-foreground">没有找到匹配的条目</div>
+            <div className="px-4 py-4 text-sm text-muted-foreground">没有找到匹配的条目</div>
           )}
         </div>
       ) : null}

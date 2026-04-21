@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { ArrowLeft, ExternalLink } from "lucide-react"
+import { ArrowLeft, ExternalLink, Eye, Flame, Sparkles } from "lucide-react"
 import { TrackToolView } from "@/components/track-tool-view"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -20,70 +20,118 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   if (!tool) {
     return (
-      <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="mb-4 text-2xl font-bold">条目不存在</h1>
-        <p className="mb-6 text-muted-foreground">你访问的条目不存在，或者暂时不可见。</p>
-        <Link href="/">
+      <div className="container mx-auto px-4 py-20 text-center">
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">
+          条目不存在
+        </h1>
+        <p className="mt-3 text-muted-foreground">
+          你访问的条目不存在，或者暂时不可见。
+        </p>
+        <Link href="/" className="mt-8 inline-block">
           <Button>返回首页</Button>
         </Link>
       </div>
     )
   }
 
+  const hasPreview = Boolean(tool.previewImageUrl)
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-10 md:py-14">
       <TrackToolView toolId={tool.id} />
 
-      <Link href={tool.channelHref} className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="mr-2 h-4 w-4" />
+      {/* Back link */}
+      <Link
+        href={tool.channelHref}
+        className="group inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-sm text-muted-foreground shadow-warm-sm transition-all hover:border-primary/40 hover:text-primary"
+      >
+        <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
         返回 {tool.channelLabel}
       </Link>
 
-      <div className="relative mb-8 h-64 w-full overflow-hidden rounded-[1.5rem]">
-        <Image src={tool.previewImageUrl || "/placeholder.svg"} alt={tool.name} fill className="object-cover" priority />
-      </div>
+      {/* Preview image with gradient overlay */}
+      {hasPreview && (
+        <div className="relative mx-auto mt-6 aspect-[16/9] w-full max-w-5xl overflow-hidden rounded-3xl border border-border/60 shadow-warm-lg">
+          <Image
+            src={tool.previewImageUrl || "/placeholder.svg"}
+            alt={tool.name}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+        </div>
+      )}
 
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-6 flex items-center gap-4">
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-white">
-            <Image src={tool.logo} alt={tool.name} fill className="object-contain p-2" />
+      <div className="mx-auto mt-10 max-w-3xl">
+        {/* Tool header */}
+        <div className="flex flex-wrap items-center gap-5">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-warm-sm">
+            <Image
+              src={tool.logo}
+              alt={tool.name}
+              fill
+              className="object-contain p-3"
+            />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold">{tool.name}</h1>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <h1 className="font-serif text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
+              {tool.name}
+            </h1>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <Badge variant="outline">{tool.channelLabel}</Badge>
-              <Badge>{tool.category}</Badge>
-              {tool.isHot && <Badge variant="secondary">当前热门</Badge>}
-              {tool.isNew && <Badge variant="outline">本周新增</Badge>}
+              <Badge variant="soft">{tool.category}</Badge>
+              {tool.isHot && (
+                <Badge variant="soft" className="gap-1">
+                  <Flame className="h-3 w-3" strokeWidth={2.2} />
+                  当前热门
+                </Badge>
+              )}
+              {tool.isNew && (
+                <Badge variant="outline" className="gap-1 border-accent/40 text-accent">
+                  <Sparkles className="h-3 w-3" strokeWidth={2.2} />
+                  本周新增
+                </Badge>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="mb-6 grid gap-4 rounded-[1.5rem] border border-black/10 bg-white/75 p-5 md:grid-cols-3">
-          <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">频道</p>
-            <p className="mt-2 text-sm font-medium">{tool.channelLabel}</p>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">分类</p>
-            <p className="mt-2 text-sm font-medium">{tool.category}</p>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">近 7 天浏览</p>
-            <p className="mt-2 text-sm font-medium">{tool.weeklyViews}</p>
-          </div>
+        {/* Description */}
+        <p className="mt-8 text-lg leading-relaxed text-muted-foreground">
+          {tool.description}
+        </p>
+
+        {/* Info grid */}
+        <div className="mt-8 grid gap-3 md:grid-cols-3">
+          <InfoCard label="频道" value={tool.channelLabel} />
+          <InfoCard label="分类" value={tool.category} />
+          <InfoCard
+            label="近 7 天浏览"
+            value={tool.weeklyViews}
+            icon={<Eye className="h-3.5 w-3.5" />}
+          />
         </div>
 
+        {/* CTA */}
         {tool.websiteUrl ? (
-          <Button className="mb-8" asChild>
-            <a href={tool.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center">
-              打开官网
-              <ExternalLink className="ml-2 h-4 w-4" />
-            </a>
-          </Button>
+          <div className="mt-10">
+            <Button asChild size="lg">
+              <a
+                href={tool.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group"
+              >
+                打开官网
+                <ExternalLink className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </Button>
+          </div>
         ) : null}
 
-        <div className="markdown-content">
+        {/* Markdown content */}
+        <div className="markdown-content mt-12 border-t border-border/60 pt-10">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
@@ -92,7 +140,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                   {...props}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-primary underline underline-offset-4"
+                  className="font-medium text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary"
                 />
               ),
             }}
@@ -101,6 +149,28 @@ export default async function ToolPage({ params }: ToolPageProps) {
           </ReactMarkdown>
         </div>
       </div>
+    </div>
+  )
+}
+
+function InfoCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string
+  value: string | number
+  icon?: React.ReactNode
+}) {
+  return (
+    <div className="rounded-2xl border border-border/70 bg-card p-4">
+      <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        {icon}
+        {label}
+      </p>
+      <p className="mt-2 font-serif text-lg font-semibold tracking-tight text-foreground">
+        {value}
+      </p>
     </div>
   )
 }
