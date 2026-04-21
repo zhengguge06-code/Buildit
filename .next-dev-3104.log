@@ -1,0 +1,20 @@
+
+> my-v0-project@0.1.0 dev C:\Users\admin\ai-coding\ai-tools-directory
+> next dev "--port" "3104"
+
+   ▲ Next.js 15.2.4
+   - Local:        http://localhost:3104
+   - Network:      http://198.18.0.1:3104
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 4.6s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 555ms (154 modules)
+ ○ Compiling /tool/[slug] ...
+ ✓ Compiled /tool/[slug] in 8.2s (1425 modules)
+ ✓ Compiled in 788ms (491 modules)
+ GET /tool/cursor 200 in 10713ms
+ GET /tool/cursor 200 in 10727ms
+ GET /tool/codex 200 in 471ms
+[?25h

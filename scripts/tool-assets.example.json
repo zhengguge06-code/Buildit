@@ -1,0 +1,14 @@
+{
+  "tools": [
+    {
+      "slug": "cursor",
+      "logoSource": "https://example.com/assets/cursor-logo.png",
+      "previewSource": "https://example.com/assets/cursor-preview.jpg"
+    },
+    {
+      "slug": "vercel",
+      "logoSource": "C:/path/to/vercel-logo.svg",
+      "previewSource": "C:/path/to/vercel-preview.png"
+    }
+  ]
+}

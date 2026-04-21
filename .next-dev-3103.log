@@ -1,0 +1,22 @@
+
+> my-v0-project@0.1.0 dev C:\Users\admin\ai-coding\ai-tools-directory
+> next dev "--port" "3103"
+
+   ▲ Next.js 15.2.4
+   - Local:        http://localhost:3103
+   - Network:      http://198.18.0.1:3103
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 5.6s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 719ms (154 modules)
+ ○ Compiling /vibe-tools ...
+ ✓ Compiled /vibe-tools in 7.9s (1955 modules)
+ ✓ Compiled in 1094ms (902 modules)
+ GET /vibe-tools 200 in 9831ms
+ ✓ Compiled in 1366ms (902 modules)
+ ✓ Compiled in 2.2s (1955 modules)
+ GET /vibe-tools 200 in 1476ms
+ GET /vibe-tools 200 in 751ms
+[?25h

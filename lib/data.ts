@@ -2,9 +2,10 @@ const toolDetailTemplate = (name: string, summary: string, highlights: string[])
 
 ${summary}
 
-## 适合谁
-- 想尽快判断这个条目是否值得收藏的人
-- 需要了解主要能力、适用场景和上手方式的人
+## 适合谁看
+
+- 想快速判断这个条目是否值得收藏的人
+- 想了解主要能力、适用场景和上手方式的人
 - 希望在同类产品里快速做选择的人
 
 ## 主要亮点
@@ -13,9 +14,10 @@ ${highlights.map((item) => `- ${item}`).join("\n")}
 
 ## 使用建议
 
-1. 先访问官网或产品页了解最新功能与定价边界。
-2. 再结合你的工作流判断它更适合原型验证、开发协作，还是内容生产。
-3. 如果准备长期使用，建议同时关注它的导出能力、团队协作和稳定性。`
+1. 先访问官网或产品页，确认它当前的功能边界和定价策略。
+2. 再结合你的工作流判断它更适合做原型验证、协作开发，还是内容生产。
+3. 如果准备长期使用，建议顺手确认导出能力、协作方式和稳定性。
+`
 
 export const fallbackCategories = [
   { id: "vibe-prototyping", name: "灵感原型", icon: "💡", channelType: "vibe-tools" },
@@ -26,14 +28,12 @@ export const fallbackCategories = [
   { id: "vibe-backend", name: "数据后端", icon: "🗄️", channelType: "vibe-tools" },
   { id: "vibe-automation", name: "自动化流程", icon: "🔄", channelType: "vibe-tools" },
   { id: "vibe-deploy", name: "部署发布", icon: "🚀", channelType: "vibe-tools" },
-  { id: "product-saas", name: "SaaS 产品", icon: "📦", channelType: "vibe-products" },
-  { id: "product-directory", name: "导航站", icon: "🧭", channelType: "vibe-products" },
-  { id: "product-landing", name: "落地页", icon: "🪧", channelType: "vibe-products" },
-  { id: "product-portfolio", name: "作品集", icon: "🗂️", channelType: "vibe-products" },
-  { id: "product-ai-webapp", name: "AI Web 应用", icon: "🌐", channelType: "vibe-products" },
-  { id: "product-content", name: "内容工具", icon: "✍️", channelType: "vibe-products" },
-  { id: "product-productivity", name: "效率产品", icon: "⚡", channelType: "vibe-products" },
-  { id: "product-community", name: "社区平台", icon: "👥", channelType: "vibe-products" },
+  { id: "product-interface", name: "界面表现", icon: "🖼️", channelType: "vibe-products" },
+  { id: "product-interaction", name: "交互体验", icon: "🫶", channelType: "vibe-products" },
+  { id: "product-structure", name: "产品结构", icon: "🧭", channelType: "vibe-products" },
+  { id: "product-conversion", name: "商业转化", icon: "💸", channelType: "vibe-products" },
+  { id: "product-growth", name: "增长运营", icon: "📈", channelType: "vibe-products" },
+  { id: "product-brand", name: "品牌表达", icon: "✨", channelType: "vibe-products" },
 ] as const
 
 export const fallbackTools = [
@@ -49,7 +49,7 @@ export const fallbackTools = [
     previewImageUrl: "/placeholder.jpg",
     fullDescription: toolDetailTemplate("Cursor", "一款围绕 AI 编程协作体验打造的 IDE 产品。", [
       "适合重度代码编辑、重构和连续开发",
-      "在 Vibe Coding 语境下讨论度很高",
+      "在 Vibe Coding 语境里讨论度很高",
       "从需求到实现的协作链路比较顺滑",
     ]),
     publishedAt: "2026-04-19T02:00:00.000Z",
@@ -152,60 +152,98 @@ export const fallbackTools = [
     status: "published",
   },
   {
-    id: "product-shipfast",
-    name: "ShipFast",
-    slug: "shipfast",
-    description: "典型的独立开发者产品模板站，适合参考如何包装和售卖 AI 产品。",
+    id: "product-linear",
+    name: "Linear",
+    slug: "linear",
+    description: "界面克制、层级清晰，是很多产品团队在信息密度和节奏感上的参考样本。",
     logo: "/placeholder-logo.svg",
-    categoryId: "product-saas",
+    categoryId: "product-interface",
     channelType: "vibe-products",
-    websiteUrl: "https://shipfa.st",
+    websiteUrl: "https://linear.app/",
     previewImageUrl: "/placeholder.jpg",
-    fullDescription: toolDetailTemplate("ShipFast", "一个围绕快速上线 SaaS 的产品化案例。", [
-      "适合参考独立开发产品的销售表达",
-      "文案、结构和价格引导都很直接",
-      "很适合作为 SaaS 落地页灵感样本",
+    fullDescription: toolDetailTemplate("Linear", "一个很适合参考界面表现的现代产品案例。", [
+      "信息密度高但依然清晰",
+      "层级、留白和节奏控制得很好",
+      "适合参考专业工具型产品的视觉组织方式",
+    ]),
+    publishedAt: "2026-04-21T08:00:00.000Z",
+    weeklyViews: 0,
+    status: "published",
+  },
+  {
+    id: "product-raycast",
+    name: "Raycast",
+    slug: "raycast",
+    description: "界面统一性很强，桌面效率产品的视觉表达和功能呈现都很完整。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "product-interface",
+    channelType: "vibe-products",
+    websiteUrl: "https://www.raycast.com/",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Raycast", "一个适合参考界面表现与产品包装结合方式的案例。", [
+      "品牌气质与界面表现一致",
+      "功能展示和视觉样式整合得很好",
+      "适合参考桌面效率产品的表达方式",
+    ]),
+    publishedAt: "2026-04-20T08:00:00.000Z",
+    weeklyViews: 0,
+    status: "published",
+  },
+  {
+    id: "product-notion",
+    name: "Notion",
+    slug: "notion",
+    description: "在复杂信息组织和简洁界面之间拿捏得很好，适合参考多层内容产品的视觉秩序。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "product-interface",
+    channelType: "vibe-products",
+    websiteUrl: "https://www.notion.com/",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Notion", "一个适合参考内容型产品界面表现的长期样本。", [
+      "复杂结构下仍然保持清楚的页面秩序",
+      "视觉风格克制但辨识度高",
+      "适合参考多模块产品如何保持统一感",
+    ]),
+    publishedAt: "2026-04-19T08:00:00.000Z",
+    weeklyViews: 0,
+    status: "published",
+  },
+  {
+    id: "product-granola",
+    name: "Granola",
+    slug: "granola",
+    description: "AI 会议笔记产品里界面气质非常完整，适合参考轻盈、友好的产品呈现方式。",
+    logo: "/placeholder-logo.svg",
+    categoryId: "product-interface",
+    channelType: "vibe-products",
+    websiteUrl: "https://www.granola.ai/",
+    previewImageUrl: "/placeholder.jpg",
+    fullDescription: toolDetailTemplate("Granola", "一个适合参考轻量 AI 产品界面表达的案例。", [
+      "整体氛围轻但不幼稚",
+      "视觉节奏和留白处理舒服",
+      "适合参考 AI 产品如何做亲和表达",
     ]),
     publishedAt: "2026-04-18T08:00:00.000Z",
-    weeklyViews: 141,
+    weeklyViews: 0,
     status: "published",
   },
   {
-    id: "product-waiby",
-    name: "waiby",
-    slug: "waiby",
-    description: "以精选案例和工具内容为主的导航站，适合参考信息架构和收录方式。",
+    id: "product-arc",
+    name: "Arc",
+    slug: "arc",
+    description: "界面表达和品牌气质高度统一，适合参考具有明显个性的产品视觉组织方式。",
     logo: "/placeholder-logo.svg",
-    categoryId: "product-directory",
+    categoryId: "product-interface",
     channelType: "vibe-products",
-    websiteUrl: "https://waiby.me",
+    websiteUrl: "https://arc.net/",
     previewImageUrl: "/placeholder.jpg",
-    fullDescription: toolDetailTemplate("waiby", "一个很适合参考内容组织方式的导航型产品。", [
-      "适合观察频道入口和目录页结构",
-      "案例收录思路清晰",
-      "适合作为整合站灵感来源",
+    fullDescription: toolDetailTemplate("Arc", "一个适合参考强个性产品界面表现的案例。", [
+      "界面风格和品牌表达高度一体化",
+      "视觉记忆点明确",
+      "适合参考有态度产品的呈现方式",
     ]),
-    publishedAt: "2026-04-16T03:00:00.000Z",
-    weeklyViews: 126,
-    status: "published",
-  },
-  {
-    id: "product-gpts-works",
-    name: "GPTs Works",
-    slug: "gpts-works",
-    description: "偏展示型的 AI Web 应用集合，适合参考内容呈现和功能包装。",
-    logo: "/placeholder-logo.svg",
-    categoryId: "product-ai-webapp",
-    channelType: "vibe-products",
-    websiteUrl: "https://gpts.works",
-    previewImageUrl: "/placeholder.jpg",
-    fullDescription: toolDetailTemplate("GPTs Works", "一个值得参考展示型 AI Web 应用表达的案例。", [
-      "适合观察产品列表页的讲故事方式",
-      "适合参考产品定位呈现",
-      "更偏灵感启发而非工具底座",
-    ]),
-    publishedAt: "2026-04-12T09:00:00.000Z",
-    weeklyViews: 78,
+    publishedAt: "2026-04-17T08:00:00.000Z",
+    weeklyViews: 0,
     status: "published",
   },
 ] as const

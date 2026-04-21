@@ -14,6 +14,16 @@ interface ToolPageProps {
   }>
 }
 
+const PLACEHOLDER_ASSET_SEGMENTS = ["placeholder-logo", "placeholder.jpg", "placeholder.svg"]
+
+function isPlaceholderAssetUrl(value: string | null | undefined) {
+  if (!value) {
+    return false
+  }
+
+  return PLACEHOLDER_ASSET_SEGMENTS.some((segment) => value.includes(segment))
+}
+
 export default async function ToolPage({ params }: ToolPageProps) {
   const { slug } = await params
   const tool = await getToolDetailBySlug(slug)
@@ -34,7 +44,9 @@ export default async function ToolPage({ params }: ToolPageProps) {
     )
   }
 
-  const hasPreview = Boolean(tool.previewImageUrl)
+  const hasPreview = Boolean(tool.previewImageUrl && !isPlaceholderAssetUrl(tool.previewImageUrl))
+  const hasLogo = Boolean(tool.logo && !isPlaceholderAssetUrl(tool.logo))
+  const logoFallback = tool.name.slice(0, 2).toUpperCase()
 
   return (
     <div className="container mx-auto px-4 py-10 md:py-14">
@@ -67,12 +79,18 @@ export default async function ToolPage({ params }: ToolPageProps) {
         {/* Tool header */}
         <div className="flex flex-wrap items-center gap-5">
           <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-card shadow-warm-sm">
-            <Image
-              src={tool.logo}
-              alt={tool.name}
-              fill
-              className="object-contain p-3"
-            />
+            {hasLogo ? (
+              <Image
+                src={tool.logo}
+                alt={tool.name}
+                fill
+                className="object-contain p-3"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-accent/10 to-background font-serif text-xl font-semibold tracking-tight text-foreground">
+                {logoFallback}
+              </div>
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="font-serif text-4xl font-semibold tracking-tight text-foreground md:text-5xl">

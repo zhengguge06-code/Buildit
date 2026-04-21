@@ -6,16 +6,15 @@ import { useRouter } from "next/navigation"
 import CategorySidebar from "@/components/category-sidebar"
 import ToolCard from "@/components/tool-card"
 import { Button } from "@/components/ui/button"
-import { FadeInUp, StaggerGrid, StaggerItem } from "@/components/motion/fade"
+import { FadeInUp } from "@/components/motion/fade"
 import type { ChannelPageData } from "@/lib/ai-tools"
 
 type ChannelPageClientProps = ChannelPageData
+const CATEGORY_DISPLAY_LIMIT = 10
 
 export default function ChannelPageClient({
   channel,
   categories,
-  weeklyNewTools,
-  hotTools,
   toolsByCategory,
 }: ChannelPageClientProps) {
   const router = useRouter()
@@ -40,6 +39,11 @@ export default function ChannelPageClient({
     icon.startsWith("/") ||
     icon.startsWith("data:image/")
 
+  const placeholderText =
+    channel.id === "vibe-products"
+      ? "这个板块先预留，等我们整理好产品口径后再开放展示。"
+      : "这个板块先预留，等我们整理好展示规则后再开放。"
+
   return (
     <div className="flex">
       <CategorySidebar
@@ -50,7 +54,6 @@ export default function ChannelPageClient({
       />
 
       <div className="min-h-[calc(100vh-4rem)] flex-1 px-4 py-10 md:px-8 lg:px-12 lg:py-14">
-        {/* Hero */}
         <FadeInUp>
           <section className="relative mx-auto max-w-4xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
@@ -66,7 +69,6 @@ export default function ChannelPageClient({
           </section>
         </FadeInUp>
 
-        {/* Mobile category pills */}
         <div className="mt-8 flex flex-wrap gap-2 md:hidden">
           {categories.map((category) => (
             <Button
@@ -80,62 +82,27 @@ export default function ChannelPageClient({
           ))}
         </div>
 
-        {/* Weekly new */}
         <FadeInUp delay={0.1}>
           <section className="mt-16">
-            <SectionHeading
-              eyebrow="01"
-              title="本周新增"
-              subtitle="过去 7 天内最新发布的条目"
-            />
-            {weeklyNewTools.length > 0 ? (
-              <StaggerGrid className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {weeklyNewTools.map((tool) => (
-                  <StaggerItem key={tool.id} className="h-full">
-                    <ToolCard tool={tool} />
-                  </StaggerItem>
-                ))}
-              </StaggerGrid>
-            ) : (
-              <EmptyHint>这个频道最近 7 天还没有新的已发布条目。</EmptyHint>
-            )}
+            <SectionHeading title="本周新增" subtitle="先预留位置，后面再接真实运营规则。" />
+            <EmptyHint>{placeholderText}</EmptyHint>
           </section>
         </FadeInUp>
 
-        {/* Hot */}
-        <FadeInUp delay={0.1}>
+        <FadeInUp delay={0.12}>
           <section className="mt-16">
-            <SectionHeading
-              eyebrow="02"
-              title="当前热门"
-              subtitle="近期访问量最高的条目"
-            />
-            {hotTools.length > 0 ? (
-              <StaggerGrid className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {hotTools.map((tool) => (
-                  <StaggerItem key={tool.id} className="h-full">
-                    <ToolCard tool={tool} />
-                  </StaggerItem>
-                ))}
-              </StaggerGrid>
-            ) : (
-              <EmptyHint>当前还没有可展示的热门数据。</EmptyHint>
-            )}
+            <SectionHeading title="当前热门" subtitle="先保留版位，等浏览和统计策略稳定后再开放。" />
+            <EmptyHint>{placeholderText}</EmptyHint>
           </section>
         </FadeInUp>
 
-        {/* Browse by category */}
-        <FadeInUp delay={0.1}>
+        <FadeInUp delay={0.14}>
           <section className="mt-16">
-            <SectionHeading
-              eyebrow="03"
-              title="分类浏览"
-              subtitle="按主题浏览所有已收录条目"
-            />
+            <SectionHeading title="分类浏览" subtitle="先按主分类浏览已收录的条目。" />
 
             <div className="mt-8 space-y-14">
               {categories.map((category) => {
-                const categoryTools = toolsByCategory[category.id] ?? []
+                const categoryTools = (toolsByCategory[category.id] ?? []).slice(0, CATEGORY_DISPLAY_LIMIT)
 
                 return (
                   <section
@@ -169,7 +136,7 @@ export default function ChannelPageClient({
                           {category.name}
                         </h3>
                         <p className="text-xs text-muted-foreground">
-                          共 {categoryTools.length} 个条目
+                          展示 {categoryTools.length} 个条目
                         </p>
                       </div>
                     </div>
@@ -194,30 +161,13 @@ export default function ChannelPageClient({
   )
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  subtitle,
-}: {
-  eyebrow: string
-  title: string
-  subtitle?: string
-}) {
+function SectionHeading({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
-    <div className="flex items-end justify-between gap-4">
-      <div className="flex items-center gap-4">
-        <span className="font-serif text-3xl font-semibold italic text-primary/70">
-          {eyebrow}
-        </span>
-        <div>
-          <h2 className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
-          )}
-        </div>
-      </div>
+    <div>
+      <h2 className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+        {title}
+      </h2>
+      {subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
     </div>
   )
 }

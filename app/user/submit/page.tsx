@@ -83,8 +83,16 @@ const defaultValues: z.infer<typeof formSchema> = {
   previewImageUrl: "",
 }
 
+const categoryOrder = new Map(
+  fallbackCategories.map((category, index) => [category.name, index])
+)
+
 function normalizeChannelType(value: string | null | undefined): ChannelType {
   return value === "vibe-products" ? "vibe-products" : "vibe-tools"
+}
+
+function normalizeCategoryName(name: string) {
+  return name === "AI IDE" ? "AI 编程环境" : name
 }
 
 function getChannelLabel(channelType: ChannelType) {
@@ -93,8 +101,21 @@ function getChannelLabel(channelType: ChannelType) {
 
 function getChannelHint(channelType: ChannelType) {
   return channelType === "vibe-products"
-    ? "你提交的是可供参考的真实产品案例。"
-    : "你提交的是用来构建产品的基础设施。"
+    ? "你提交的是值得参考的真实产品案例，我们更关注它哪里值得借鉴。"
+    : "你提交的是用来构建产品的基础设施、平台或工作流工具。"
+}
+
+function sortCategoryOptions(categories: CategoryOption[]) {
+  return [...categories].sort((a, b) => {
+    const aOrder = categoryOrder.get(a.name) ?? 999
+    const bOrder = categoryOrder.get(b.name) ?? 999
+
+    if (aOrder !== bOrder) {
+      return aOrder - bOrder
+    }
+
+    return a.name.localeCompare(b.name, "zh-CN")
+  })
 }
 
 export default function SubmitPage() {
@@ -124,11 +145,13 @@ export default function SubmitPage() {
       if (!hasSupabaseEnv) {
         if (isMounted) {
           setCategories(
-            fallbackCategories.map((category) => ({
-              id: category.id,
-              name: category.name,
-              channelType: normalizeChannelType(category.channelType),
-            }))
+            sortCategoryOptions(
+              fallbackCategories.map((category) => ({
+                id: category.id,
+                name: normalizeCategoryName(category.name),
+                channelType: normalizeChannelType(category.channelType),
+              }))
+            )
           )
           setIsCheckingAuth(false)
           setIsLoadingCategories(false)
@@ -157,7 +180,7 @@ export default function SubmitPage() {
         categoryOptions = (categoryResponse.data as { id: string; name: string; channel_type?: string | null }[]).map(
           (category) => ({
             id: category.id,
-            name: category.name,
+            name: normalizeCategoryName(category.name),
             channelType: normalizeChannelType(category.channel_type),
           })
         )
@@ -167,13 +190,14 @@ export default function SubmitPage() {
         if (!legacyResponse.error && legacyResponse.data) {
           categoryOptions = (legacyResponse.data as { id: string; name: string }[]).map((category) => ({
             id: category.id,
-            name: category.name,
+            name: normalizeCategoryName(category.name),
             channelType: "vibe-tools",
           }))
         } else {
           toast({
             title: "分类加载失败",
-            description: categoryResponse.error?.message || legacyResponse.error?.message || "暂时无法加载分类。",
+            description:
+              categoryResponse.error?.message || legacyResponse.error?.message || "暂时无法加载分类。",
             variant: "destructive",
           })
         }
@@ -183,7 +207,7 @@ export default function SubmitPage() {
         return
       }
 
-      setCategories(categoryOptions)
+      setCategories(sortCategoryOptions(categoryOptions))
       setIsCheckingAuth(false)
       setIsLoadingCategories(false)
     }
@@ -212,8 +236,8 @@ export default function SubmitPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!hasSupabaseEnv) {
       toast({
-        title: "提交未启用",
-        description: "当前环境缺少数据库配置，暂时无法提交。",
+        title: "投稿未启用",
+        description: "当前环境缺少数据库配置，暂时无法投稿。",
         variant: "destructive",
       })
       return
@@ -285,7 +309,7 @@ export default function SubmitPage() {
   }
 
   if (!hasSupabaseEnv) {
-    return <div className="max-w-3xl py-8 text-sm text-muted-foreground">当前未配置数据库连接，暂时无法提交。</div>
+    return <div className="max-w-3xl py-8 text-sm text-muted-foreground">当前未配置数据库连接，暂时无法投稿。</div>
   }
 
   return (
@@ -295,7 +319,7 @@ export default function SubmitPage() {
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Submission</p>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">提交条目</h1>
           <p className="mt-3 text-sm leading-7 text-muted-foreground">
-            先选频道，再选分类，再填写信息。这样频道归属、分类浏览和后续审核都会更清晰。
+            先选频道，再选分类，再补全条目信息。这样频道归属、分类浏览和后续审核都会更清楚。
           </p>
         </div>
 
@@ -331,7 +355,7 @@ export default function SubmitPage() {
                 <FormItem>
                   <FormLabel>名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="例如：Cursor 或 waiby" {...field} />
+                    <Input placeholder="例如：Cursor 或 Linear" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -401,7 +425,7 @@ export default function SubmitPage() {
                   <FormLabel>简介</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="简要描述这个条目的主要能力、用途或它为什么值得参考。"
+                      placeholder="简要描述这个条目的主要能力、用途，或它为什么值得参考。"
                       className="resize-none"
                       {...field}
                     />
@@ -419,7 +443,7 @@ export default function SubmitPage() {
                   <FormLabel>详细介绍</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="详细介绍能力、亮点、适用人群、使用方式或你觉得值得看的地方。"
+                      placeholder="详细介绍能力、亮点、适用人群、使用方式，或者你觉得最值得看的地方。"
                       className="min-h-[440px]"
                       {...field}
                     />

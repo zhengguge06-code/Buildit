@@ -37,7 +37,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${fraunces.variable}`}
     >
-      <body className="font-sans">
+      <body suppressHydrationWarning className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
             <Header />

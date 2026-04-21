@@ -3,8 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowUpRight, Flame, Sparkles } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { ArrowUpRight } from "lucide-react"
 import type { ToolSummary } from "@/lib/ai-tools"
 
 interface ToolCardProps {
@@ -47,23 +46,6 @@ export default function ToolCard({ tool }: ToolCardProps) {
         <p className="line-clamp-2 flex-1 text-sm leading-6 text-muted-foreground">
           {tool.description}
         </p>
-
-        {(tool.isHot || tool.isNew) && (
-          <div className="flex flex-wrap items-center gap-1.5">
-            {tool.isHot && (
-              <Badge variant="soft" className="gap-1">
-                <Flame className="h-3 w-3" strokeWidth={2.2} />
-                热门
-              </Badge>
-            )}
-            {tool.isNew && (
-              <Badge variant="outline" className="gap-1 border-accent/40 text-accent">
-                <Sparkles className="h-3 w-3" strokeWidth={2.2} />
-                新增
-              </Badge>
-            )}
-          </div>
-        )}
       </Link>
     </motion.div>
   )

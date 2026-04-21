@@ -97,14 +97,12 @@ from (
     ('数据后端', '🗄️', 'vibe-tools'),
     ('自动化流程', '🔄', 'vibe-tools'),
     ('部署发布', '🚀', 'vibe-tools'),
-    ('SaaS 产品', '📦', 'vibe-products'),
-    ('导航站', '🧭', 'vibe-products'),
-    ('落地页', '🪧', 'vibe-products'),
-    ('作品集', '🗂️', 'vibe-products'),
-    ('AI Web 应用', '🌐', 'vibe-products'),
-    ('内容工具', '✍️', 'vibe-products'),
-    ('效率产品', '⚡', 'vibe-products'),
-    ('社区平台', '👥', 'vibe-products')
+    ('界面表现', '🖼️', 'vibe-products'),
+    ('交互体验', '🫶', 'vibe-products'),
+    ('产品结构', '🧭', 'vibe-products'),
+    ('商业转化', '💸', 'vibe-products'),
+    ('增长运营', '📈', 'vibe-products'),
+    ('品牌表达', '✨', 'vibe-products')
 ) as seed(name, icon, channel_type)
 where not exists (
   select 1
@@ -177,3 +175,9 @@ begin
     );
   end if;
 end $$;
+
+-- Optional cleanup for old vibe-products categories:
+--
+-- delete from public.tool_categories
+-- where channel_type = 'vibe-products'
+--   and name in ('SaaS 产品', '导航站', '落地页', '作品集', 'AI Web 应用', '内容工具', '效率产品', '社区平台');
