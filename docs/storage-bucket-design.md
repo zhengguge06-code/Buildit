@@ -1,68 +1,59 @@
 # AI Tools Directory 存储 Bucket 设计文档
 
-## 1. 概述
+## 概述
 
-根据当前项目实际上传场景，需要存储 3 类媒体文件：
-
-1. 分类 icon
-2. 工具 logo
-3. 工具预览图
-
-本方案基于 Supabase Storage 设计，采用 3 个独立 bucket。
-
----
-
-## 2. Bucket 结构
-
-建议创建以下 bucket：
+当前项目继续沿用 3 个 Supabase Storage bucket：
 
 1. `category-icons`
 2. `tool-logos`
 3. `tool-previews`
 
----
+本次 `Vibe 产品` 重构不改 bucket 名，不迁移现有 logo / preview 资源，也不新增分类 icon 对象迁移任务。
 
-## 3. 存储配置详情
+## 本次重构的明确约束
 
-### 3.1 `category-icons`
+- `tool-logos` 保持不变
+- `tool-previews` 保持不变
+- `category-icons` bucket 保留，但新的 `Vibe 产品` 主分类 icon 直接写入 `tool_categories.icon` 的 emoji，不要求上传新的分类 icon 文件
+- 不做 bucket rename
+- 不做对象路径迁移
 
-- 用途：存储左侧分类 icon 图片
+## Bucket 结构
+
+### 1. `category-icons`
+
+- 用途：历史分类 icon 图片或未来仍需图片化的分类 icon
+- 当前状态：保留，不强制参与本次 `Vibe 产品` 重构
 - 访问权限：公开可读，仅管理员可写
-- 文件类型限制：`jpg`, `jpeg`, `png`, `svg`, `webp`
-- 文件大小限制：最大 1MB
-- 命名规则：`{category_id}.{extension}`
 
-### 3.2 `tool-logos`
+### 2. `tool-logos`
 
-- 用途：存储工具 logo 图片
+- 用途：工具和产品的 logo
 - 访问权限：公开可读，认证用户可上传，仅所有者和管理员可修改
-- 文件类型限制：`jpg`, `jpeg`, `png`, `svg`, `webp`
-- 文件大小限制：最大 2MB
 - 命名规则：`{tool_id}.{extension}` 或 `submissions/{submission_id}/logo.{extension}`
 
-### 3.3 `tool-previews`
+### 3. `tool-previews`
 
-- 用途：存储工具预览图
+- 用途：工具和产品的预览图
 - 访问权限：公开可读，认证用户可上传，仅所有者和管理员可修改
-- 文件类型限制：`jpg`, `jpeg`, `png`, `webp`
-- 文件大小限制：最大 5MB
 - 命名规则：`{tool_id}/{timestamp}_{index}.{extension}` 或 `submissions/{submission_id}/preview.{extension}`
 
----
-
-## 4. 与数据库字段的对应关系
+## 与数据库字段的对应关系
 
 | 数据类型 | Bucket | 对应字段 |
 | --- | --- | --- |
-| 分类 icon | `category-icons` | `tool_categories.icon` |
-| 工具 logo | `tool-logos` | `ai_tools.logo_url` |
-| 工具预览图 | `tool-previews` | `ai_tools.preview_image_url` |
+| 分类 icon 图片 | `category-icons` | `tool_categories.icon` |
+| 工具或产品 logo | `tool-logos` | `tools.logo_url` |
+| 工具或产品预览图 | `tool-previews` | `tools.preview_image_url` |
 | 提交记录 logo | `tool-logos` | `tool_submissions.logo_url` |
 | 提交记录预览图 | `tool-previews` | `tool_submissions.preview_image_url` |
 
----
+说明：
 
-## 5. Bucket 创建 SQL
+- 新的 `Vibe 产品` 7 个主分类直接使用 emoji，例如 `🧩`、`✍️`、`🎬`
+- 因此 `tool_categories.icon` 对于这些分类会直接存 emoji，而不是 `category-icons` 的文件 URL
+
+## Bucket 创建 SQL
 
 ```sql
 insert into storage.buckets (id, name, public)
@@ -73,229 +64,11 @@ values
 on conflict (id) do nothing;
 ```
 
----
+## 结论
 
-## 6. 文件类型与大小限制 SQL
+这次重构的存储策略是：
 
-```sql
-update storage.buckets
-set
-  file_size_limit = 1000000,
-  allowed_mime_types = array['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
-where id = 'category-icons';
-
-update storage.buckets
-set
-  file_size_limit = 2000000,
-  allowed_mime_types = array['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
-where id = 'tool-logos';
-
-update storage.buckets
-set
-  file_size_limit = 5000000,
-  allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp']
-where id = 'tool-previews';
-```
-
----
-
-## 7. Storage Policy 建议
-
-### 7.1 分类 icon
-
-- 公开可读
-- 仅管理员可上传、更新、删除
-
-```sql
-create policy "Public read category icons"
-on storage.objects
-for select
-using (bucket_id = 'category-icons');
-
-create policy "Admins can upload category icons"
-on storage.objects
-for insert
-with check (
-  bucket_id = 'category-icons'
-  and auth.uid() in (select user_id from admin_users)
-);
-
-create policy "Admins can update category icons"
-on storage.objects
-for update
-using (
-  bucket_id = 'category-icons'
-  and auth.uid() in (select user_id from admin_users)
-);
-
-create policy "Admins can delete category icons"
-on storage.objects
-for delete
-using (
-  bucket_id = 'category-icons'
-  and auth.uid() in (select user_id from admin_users)
-);
-```
-
-### 7.2 工具 logo
-
-- 公开可读
-- 登录用户可上传
-- 仅所有者和管理员可更新/删除
-
-```sql
-create policy "Public read tool logos"
-on storage.objects
-for select
-using (bucket_id = 'tool-logos');
-
-create policy "Authenticated users can upload tool logos"
-on storage.objects
-for insert
-with check (
-  bucket_id = 'tool-logos'
-  and auth.uid() is not null
-);
-
-create policy "Owners and admins can update tool logos"
-on storage.objects
-for update
-using (
-  bucket_id = 'tool-logos'
-  and (
-    auth.uid() = owner
-    or auth.uid() in (select user_id from admin_users)
-  )
-);
-
-create policy "Owners and admins can delete tool logos"
-on storage.objects
-for delete
-using (
-  bucket_id = 'tool-logos'
-  and (
-    auth.uid() = owner
-    or auth.uid() in (select user_id from admin_users)
-  )
-);
-```
-
-### 7.3 工具预览图
-
-- 公开可读
-- 登录用户可上传
-- 仅所有者和管理员可更新/删除
-
-```sql
-create policy "Public read tool previews"
-on storage.objects
-for select
-using (bucket_id = 'tool-previews');
-
-create policy "Authenticated users can upload tool previews"
-on storage.objects
-for insert
-with check (
-  bucket_id = 'tool-previews'
-  and auth.uid() is not null
-);
-
-create policy "Owners and admins can update tool previews"
-on storage.objects
-for update
-using (
-  bucket_id = 'tool-previews'
-  and (
-    auth.uid() = owner
-    or auth.uid() in (select user_id from admin_users)
-  )
-);
-
-create policy "Owners and admins can delete tool previews"
-on storage.objects
-for delete
-using (
-  bucket_id = 'tool-previews'
-  and (
-    auth.uid() = owner
-    or auth.uid() in (select user_id from admin_users)
-  )
-);
-```
-
-说明：
-
-- 以上策略沿用了参考文档中的 `admin_users` 假设
-- 如果项目中还没有 `admin_users` 表，后续需要补一张管理员表，或者改成通过自定义 claim 判断管理员身份
-
----
-
-## 8. 前端上传命名建议
-
-### 分类 icon
-
-```text
-{category_id}.{extension}
-```
-
-### 工具 logo
-
-```text
-{tool_id}.{extension}
-```
-
-或审核前：
-
-```text
-submissions/{submission_id}/logo.{extension}
-```
-
-### 工具预览图
-
-```text
-{tool_id}/{timestamp}_{index}.{extension}
-```
-
-或审核前：
-
-```text
-submissions/{submission_id}/preview.{extension}
-```
-
----
-
-## 9. 数据保存建议
-
-推荐直接在数据库中保存完整 public URL：
-
-- `tool_categories.icon`
-- `ai_tools.logo_url`
-- `ai_tools.preview_image_url`
-- `tool_submissions.logo_url`
-- `tool_submissions.preview_image_url`
-
-优点：
-
-- 前端展示最直接
-- 当前项目接入成本最低
-
----
-
-## 10. 最终结论
-
-现在这份存储文档已经和数据库结构完全对齐：
-
-1. `category-icons`
-   - 对应分类 icon
-
-2. `tool-logos`
-   - 对应工具和提交记录的 logo
-
-3. `tool-previews`
-   - 对应工具和提交记录的预览图
-
-后续如果你继续推进，我可以直接帮你接下一步：
-
-1. Supabase Storage 上传代码
-2. 提交工具页的真实上传接入
-3. 审核通过时把图片字段同步写入正式工具表
+- 只改分类数据和前后端读写
+- 不改 bucket 名
+- 不迁移 logo / preview 文件
+- 不要求给新的 `Vibe 产品` 分类上传新的 icon 文件

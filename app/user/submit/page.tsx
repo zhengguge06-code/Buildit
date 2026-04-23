@@ -24,6 +24,7 @@ import type { ChannelType } from "@/lib/ai-tools"
 import { fallbackCategories } from "@/lib/data"
 import { createClient } from "@/lib/supabase/client"
 import { hasSupabaseEnv } from "@/lib/utils"
+import { buildVibeProductCategoryOptions } from "@/lib/vibe-product-categories"
 
 const formSchema = z.object({
   channelType: z.enum(["vibe-tools", "vibe-products"], {
@@ -83,7 +84,7 @@ const defaultValues: z.infer<typeof formSchema> = {
   previewImageUrl: "",
 }
 
-const categoryOrder = new Map(
+const categoryOrder = new Map<string, number>(
   fallbackCategories.map((category, index) => [category.name, index])
 )
 
@@ -101,7 +102,7 @@ function getChannelLabel(channelType: ChannelType) {
 
 function getChannelHint(channelType: ChannelType) {
   return channelType === "vibe-products"
-    ? "你提交的是值得参考的真实产品案例，我们更关注它哪里值得借鉴。"
+    ? "你提交的是值得参考的真实产品案例。这里先只选一个主分类，badge 由后台后续补充。"
     : "你提交的是用来构建产品的基础设施、平台或工作流工具。"
 }
 
@@ -177,13 +178,22 @@ export default function SubmitPage() {
       let categoryOptions: CategoryOption[] = []
 
       if (!categoryResponse.error && categoryResponse.data) {
-        categoryOptions = (categoryResponse.data as { id: string; name: string; channel_type?: string | null }[]).map(
-          (category) => ({
+        const rows = categoryResponse.data as { id: string; name: string; channel_type?: string | null }[]
+        const vibeToolCategories = rows
+          .filter((category) => normalizeChannelType(category.channel_type) === "vibe-tools")
+          .map((category) => ({
             id: category.id,
             name: normalizeCategoryName(category.name),
-            channelType: normalizeChannelType(category.channel_type),
-          })
-        )
+            channelType: "vibe-tools" as ChannelType,
+          }))
+        const vibeProductCategories = buildVibeProductCategoryOptions(
+          rows.filter((category) => normalizeChannelType(category.channel_type) === "vibe-products")
+        ).map((category) => ({
+          ...category,
+          channelType: "vibe-products" as ChannelType,
+        }))
+
+        categoryOptions = [...vibeToolCategories, ...vibeProductCategories]
       } else {
         const legacyResponse = await supabase.from("tool_categories").select("id, name").order("created_at", { ascending: true })
 
@@ -319,7 +329,7 @@ export default function SubmitPage() {
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Submission</p>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">提交条目</h1>
           <p className="mt-3 text-sm leading-7 text-muted-foreground">
-            先选频道，再选分类，再补全条目信息。这样频道归属、分类浏览和后续审核都会更清楚。
+            先选频道，再选主分类，再补全条目信息。这样频道归属、分类浏览和后续审核都会更清楚。
           </p>
         </div>
 
@@ -411,7 +421,11 @@ export default function SubmitPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormDescription>当前只显示 {getChannelLabel(selectedChannelType)} 的分类。</FormDescription>
+                  <FormDescription>
+                    {selectedChannelType === "vibe-products"
+                      ? "当前只显示 Vibe 产品的 7 个主分类。badge 暂时不开放投稿时填写。"
+                      : `当前只显示 ${getChannelLabel(selectedChannelType)} 的分类。`}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -425,7 +439,11 @@ export default function SubmitPage() {
                   <FormLabel>简介</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="简要描述这个条目的主要能力、用途，或它为什么值得参考。"
+                      placeholder={
+                        selectedChannelType === "vibe-products"
+                          ? "简要描述这个产品是什么类型、适合参考哪里，或它为什么值得被收录。"
+                          : "简要描述这个条目的主要能力、用途，或它为什么值得参考。"
+                      }
                       className="resize-none"
                       {...field}
                     />
@@ -443,7 +461,11 @@ export default function SubmitPage() {
                   <FormLabel>详细介绍</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="详细介绍能力、亮点、适用人群、使用方式，或者你觉得最值得看的地方。"
+                      placeholder={
+                        selectedChannelType === "vibe-products"
+                          ? "详细介绍这个产品的定位、核心体验、适合借鉴的部分，或者你觉得最值得拆的地方。"
+                          : "详细介绍能力、亮点、适用人群、使用方式，或者你觉得最值得看的地方。"
+                      }
                       className="min-h-[440px]"
                       {...field}
                     />

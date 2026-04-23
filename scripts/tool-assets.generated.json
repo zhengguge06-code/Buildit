@@ -1,0 +1,1079 @@
+{
+  "tools": [
+    {
+      "slug": "linear",
+      "name": "Linear",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://linear.app/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://linear.app/static/apple-touch-icon.png?v=2",
+      "previewSource": "https://linear.app/static/og/homepage.jpg"
+    },
+    {
+      "slug": "raycast",
+      "name": "Raycast",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.raycast.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.raycast.com/favicon-production.png",
+      "previewSource": "https://www.raycast.com/opengraph-image-pwu6ef.png?7385e23163a01717"
+    },
+    {
+      "slug": "notion",
+      "name": "Notion",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.notion.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.notion.com/front-static/logo-ios.png",
+      "previewSource": "https://www.notion.com/front-static/meta/custom-agents-og.png"
+    },
+    {
+      "slug": "granola",
+      "name": "Granola",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.granola.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.granola.ai/favicon/apple-touch-icon.png",
+      "previewSource": "https://www.granola.ai/opengraph-image.png?d8119137ca8efcec"
+    },
+    {
+      "slug": "arc",
+      "name": "Arc",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://arc.net/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://arc.net/favicon.png",
+      "previewSource": "https://arc.net/og.png"
+    },
+    {
+      "slug": "gamma",
+      "name": "Gamma",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://gamma.app/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": null,
+      "previewSource": null,
+      "error": "Failed to fetch https://gamma.app/: 403 Forbidden"
+    },
+    {
+      "slug": "cal-com",
+      "name": "Cal.com",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://cal.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://framerusercontent.com/images/63tSo3fa0ylcjt88Er8WTEPS6Dw.png",
+      "previewSource": "https://framerusercontent.com/images/wR3hWD1bOPJdosDiPSZLtYpHR3k.png"
+    },
+    {
+      "slug": "tally",
+      "name": "Tally",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://tally.so/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://tally.so/tally-square.png",
+      "previewSource": "https://tally.so/images/og.jpg"
+    },
+    {
+      "slug": "airtable",
+      "name": "Airtable",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.airtable.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.airtable.com/favicon.ico",
+      "previewSource": "https://www.airtable.com/images/airtable-seo.jpg"
+    },
+    {
+      "slug": "savvycal",
+      "name": "SavvyCal",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://savvycal.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://savvycal.com/apple-touch-icon.png",
+      "previewSource": null
+    },
+    {
+      "slug": "coda",
+      "name": "Coda",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://coda.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://cdn.coda.io/icons/png/color/coda-apple-120.png",
+      "previewSource": "https://sanity-images.imgix.net/production/6b46953798756d87bc1ad579a32d2af427ba6d3d-1200x628.png?w=&amp;auto=format%2Ccompress"
+    },
+    {
+      "slug": "tana",
+      "name": "Tana",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://tana.inc/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://tana.inc/apple-touch-icon.png",
+      "previewSource": "https://tana.inc/opengraph-image?f4ab874e75931287"
+    },
+    {
+      "slug": "butter",
+      "name": "Butter",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.butter.us/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": null,
+      "previewSource": null,
+      "error": "fetch failed"
+    },
+    {
+      "slug": "readwise-reader",
+      "name": "Readwise Reader",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://readwise.io/read/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://readwise.io/favicon.ico",
+      "previewSource": "https://readwise-assets.s3.amazonaws.com/static/images/reader/OG-Reader.9fe9ca92418f.jpg"
+    },
+    {
+      "slug": "dub",
+      "name": "Dub",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://dub.co/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://assets.dub.co/favicons/apple-touch-icon.png",
+      "previewSource": "https://assets.dub.co/thumbnail.jpg"
+    },
+    {
+      "slug": "attio",
+      "name": "Attio",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://attio.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://attio.com/favicon.ico?favicon.17i4ytxwoisgb.ico?dpl=dpl_536pqijFvAihjxMYrEQaFWi6DncP",
+      "previewSource": "https://a.storyblok.com/f/234930/1200x630/df480627b4/attio-og-image.jpg"
+    },
+    {
+      "slug": "superhuman",
+      "name": "Superhuman",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://superhuman.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://superhumanstatic.com/super-funnel/main/public/images/v3/favicons/superhuman-apple-touch-icon.png",
+      "previewSource": "https://superhumanstatic.com/super-funnel/main/public/images/v3/social-share.png"
+    },
+    {
+      "slug": "mercury",
+      "name": "Mercury",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://mercury.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://mercury.com/apple-icon.png?e5cbb3efa4b20928",
+      "previewSource": "https://www.datocms-assets.com/115132/1746056008-2025-04-30_fem_homepage-social_1200x630.webp?auto=format&amp;fit=crop&amp;w=1200"
+    },
+    {
+      "slug": "beehiiv",
+      "name": "beehiiv",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.beehiiv.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://beehiiv-marketing-images.s3.amazonaws.com/Redesign2023/favicon.png",
+      "previewSource": "https://media.beehiiv.com/www/og-image/og-beehiiv.png"
+    },
+    {
+      "slug": "descript",
+      "name": "Descript",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://www.descript.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://static-cdn.descript.com/web/icons/apple-touch-icon.png",
+      "previewSource": "https://cdn.builder.io/api/v1/image/assets%2Ffcea5005d671451e9b07839c893228d0%2Fb1cf2c175fbe4a028dff4622ee1ce727"
+    },
+    {
+      "slug": "riverside",
+      "name": "Riverside",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://riverside.fm/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://riverside.com/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/5f996b22b00afe35a55e6f79/67f92c5268b90dfee63e3719_social-share.png"
+    },
+    {
+      "slug": "substack",
+      "name": "Substack",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://substack.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://substackcdn.com/icons/substack/apple-touch-icon.png",
+      "previewSource": "https://substackcdn.com/image/fetch/$s_!Xim-!,w_400,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack.com%2Ficons%2Fsubstack%2Ficon.svg"
+    },
+    {
+      "slug": "kit",
+      "name": "Kit",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://kit.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": null,
+      "previewSource": null,
+      "error": "Failed to fetch https://kit.com/: 403 Forbidden"
+    },
+    {
+      "slug": "gumroad",
+      "name": "Gumroad",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://gumroad.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://assets.gumroad.com/assets/pink-icon-c5f5013768a1da41246e70403f02afc8b34ac89c20f3ba2dd0a01f3973027700.png",
+      "previewSource": null
+    },
+    {
+      "slug": "midday",
+      "name": "Midday",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://midday.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://midday.ai/favicon.ico?favicon.0e.v4tc9__obk.ico",
+      "previewSource": "https://midday.ai/api/og?title=Midday&amp;description=The+business+stack+for+modern+founders"
+    },
+    {
+      "slug": "oura",
+      "name": "Oura",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://ouraring.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://ouraring.com/assets/icons/apple-touch-icon.png",
+      "previewSource": "https://ouraring.com/assets/icons/opengraph-400x400.png"
+    },
+    {
+      "slug": "obsidian",
+      "name": "Obsidian",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://obsidian.md/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://obsidian.md/apple-touch-icon.png",
+      "previewSource": "https://obsidian.md/images/banner.png"
+    },
+    {
+      "slug": "runwayml",
+      "name": "Runway",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://runwayml.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://runwayml.com/icon.png?icon.0jyqwm2y10pec.png",
+      "previewSource": "https://runwayml.com/opengraph-image.png?opengraph-image.0bt75ga2._tb4.png"
+    },
+    {
+      "slug": "elevenlabs",
+      "name": "ElevenLabs",
+      "channelType": "vibe-products",
+      "websiteUrl": "https://elevenlabs.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://elevenlabs.io/apple-icon.png?6592732ab34b1d42",
+      "previewSource": "https://elevenlabs.io/cover.png"
+    },
+    {
+      "slug": "codex",
+      "name": "Codex",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://openai.com/codex",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": null,
+      "previewSource": null,
+      "error": "Failed to fetch https://openai.com/codex: 403 Forbidden"
+    },
+    {
+      "slug": "figjam",
+      "name": "FigJam",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.figma.com/figjam/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://static.figma.com/app/icon/2/touch-76.png",
+      "previewSource": "https://cdn.sanity.io/images/599r6htc/regionalized/f17d3078c6c170d8395dd57aab930b84e88fa6e1-2400x1260.png?w=1200&amp;q=70&amp;fit=max&amp;auto=format"
+    },
+    {
+      "slug": "mural",
+      "name": "Mural",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.mural.co/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.mural.co/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/62e11362da2667ac3d0e6ed5/638f50f56076f389d91406a0_Mural_OG_image_launch.png"
+    },
+    {
+      "slug": "lucidchart",
+      "name": "Lucidchart",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.lucidchart.com/pages",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.lucidchart.com/favicon.ico",
+      "previewSource": null
+    },
+    {
+      "slug": "balsamiq",
+      "name": "Balsamiq",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://balsamiq.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://balsamiq.com/assets/favicon/apple-touch-icon.png",
+      "previewSource": "https://thumbs.balsamiq.com/t.png"
+    },
+    {
+      "slug": "protopie",
+      "name": "ProtoPie",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.protopie.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.protopie.io/favicon.ico",
+      "previewSource": "https://cdn.sanity.io/images/zt6u8wyi/production/2b491f79878ef2b32097a10e578cf82de2096678-1200x630.jpg"
+    },
+    {
+      "slug": "typedream",
+      "name": "Typedream",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://typedream.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://image.typedream.com/cdn-cgi/image/width=144,height=144,quality=100,fit=crop/https://api.typedream.com/v0/document/public/46d710fd-ec90-498a-901c-d6acd853f5fa/2VzZXWbYKmSfxvhmtwaxRpXSOaR_favicon.png",
+      "previewSource": "https://api.typedream.com/v0/document/public/46d710fd-ec90-498a-901c-d6acd853f5fa/2YsyFWeY5lf8FSwgOA5RpTOtGFt_Screenshot_2023-11-30_141243.png"
+    },
+    {
+      "slug": "webstudio",
+      "name": "Webstudio",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://webstudio.is/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://webstudio.is/cgi/image/logo-transparent__i_1fYszux9N-08rI-K0F.png?width=144&amp;quality=100&amp;height=144&amp;fit=pad&amp;format=auto",
+      "previewSource": "https://webstudio.is/cgi/image/visual-builder_6p7VS5-OlwHXPek83iJwo.png?format=raw"
+    },
+    {
+      "slug": "wix-studio",
+      "name": "Wix Studio",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.wix.com/studio",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://static.wixstatic.com/shapes/0d6674_28f5671807e54a04ad12ab65fc34c42e.svg",
+      "previewSource": "https://static.wixstatic.com/media/0d6674_650f4a245b8e4978b99a2a083e9cc5ca~mv2.png/v1/fill/w_1200,h_630,al_c/0d6674_650f4a245b8e4978b99a2a083e9cc5ca~mv2.png"
+    },
+    {
+      "slug": "durable",
+      "name": "Durable",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://durable.co/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://durable.com/apple-touch-icon.png",
+      "previewSource": "https://rjdavx8ozyznxeyh.public.blob.vercel-storage.com/production/seo/durable-business-og-Image-hpl5Y1p98iv6R9HUClFUzRAbCbNoan.png"
+    },
+    {
+      "slug": "unicorn-platform",
+      "name": "Unicorn Platform",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://unicornplatform.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://unicorn-images.b-cdn.net/c47f2c1b-5308-4884-bcce-7723d3e71a18?optimizer=gif",
+      "previewSource": "https://unicorn-images.b-cdn.net/28a61a11-d9a4-4126-b668-3369cca19d47?optimizer=gif"
+    },
+    {
+      "slug": "glide",
+      "name": "Glide",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.glideapps.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.glideapps.com/favicon.ico?favicon.0sou7_bpiu5pi.ico",
+      "previewSource": "https://www.glideapps.com/opengraph-image-1udkml.jpg?opengraph-image.0d-u6y-crssv0.jpg"
+    },
+    {
+      "slug": "retool",
+      "name": "Retool",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://retool.com/apps",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://dqpcjghenxt8u.cloudfront.net/images/sanity/retool-favicon-light-128x128.svg",
+      "previewSource": "https://cdn.sanity.io/images/bclf52sw/production/bf97fb919065f9dc45c7f9f3718d844ecf284e3b-1200x630.png"
+    },
+    {
+      "slug": "tooljet",
+      "name": "ToolJet",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.tooljet.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://tooljet.com/images/webclip.ico",
+      "previewSource": null
+    },
+    {
+      "slug": "appsmith",
+      "name": "Appsmith",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.appsmith.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.appsmith.com/apple-touch-icon.png",
+      "previewSource": "https://images.ctfassets.net/lpvian6u6i39/3K4hnNGrLSlQzJRF4bn32J/8da3f35480fa66fd6c439e9af35b60ab/Default_OG_image.jpg"
+    },
+    {
+      "slug": "dify",
+      "name": "Dify",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://dify.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://framerusercontent.com/images/JrsrKrR1xeMPPhbut3n5xpwKSIw.png",
+      "previewSource": "https://framerusercontent.com/assets/wuOqS9XwiT7WjyMd0HAinp7aWo.png"
+    },
+    {
+      "slug": "tabnine",
+      "name": "Tabnine",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.tabnine.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.tabnine.com/wp-content/uploads/2024/09/cropped-tabnine-favicon-180x180.png",
+      "previewSource": null
+    },
+    {
+      "slug": "kiro",
+      "name": "Kiro",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://kiro.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://kiro.dev/apple-icon.png?4cefa8c54a20b098",
+      "previewSource": "https://kiro.dev/opengraph-image.png?5c641cacbd716e07"
+    },
+    {
+      "slug": "void",
+      "name": "Void",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://voideditor.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://voideditor.com/icon.png?fe8088bdbfb5a2cf",
+      "previewSource": "https://voideditor.com/og?title=Void&amp;description=Void%20is%20an%20open%20source%20Cursor%20alternative.%20Full%20privacy.%20Fully-featured."
+    },
+    {
+      "slug": "pear-ai",
+      "name": "PearAI",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.trypear.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.trypear.ai/favicon.ico",
+      "previewSource": "https://trypear.ai/images/og-image.png"
+    },
+    {
+      "slug": "amp",
+      "name": "Amp",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://ampcode.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://ampcode.com/app-icon.png",
+      "previewSource": "https://ampcode.com/og-frontier.jpg"
+    },
+    {
+      "slug": "roo-code",
+      "name": "Roo Code",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://roocode.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://roocode.com/apple-touch-icon.png",
+      "previewSource": "https://roocode.com/api/og?title=Meet+Roo+Code&amp;description=Your+AI+Software+Engineering+Team+in+the+IDE+and+the+Cloud."
+    },
+    {
+      "slug": "goose",
+      "name": "Goose",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://block.github.io/goose/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://block.github.io/favicon.ico",
+      "previewSource": null
+    },
+    {
+      "slug": "sweep",
+      "name": "Sweep",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://sweep.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://sweep.dev/final-sweep-wizard_128x128.png",
+      "previewSource": null
+    },
+    {
+      "slug": "appwrite",
+      "name": "Appwrite",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://appwrite.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://appwrite.io/images/logos/icons/apple-touch-icon-180x180.png",
+      "previewSource": "https://appwrite.io/images/open-graph/website.png"
+    },
+    {
+      "slug": "nhost",
+      "name": "Nhost",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://nhost.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://nhost.io/favicon.ico",
+      "previewSource": "https://nhost.io/images/og-new.png"
+    },
+    {
+      "slug": "planetscale",
+      "name": "PlanetScale",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://planetscale.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://planetscale.com/apple-touch-icon.png",
+      "previewSource": "https://planetscale.com/assets/social-DtnN8vYG.png"
+    },
+    {
+      "slug": "turso",
+      "name": "Turso",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://turso.tech/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://turso.tech/favicon.ico",
+      "previewSource": "https://turso.tech/opengraph-image.png?8abb64b5fd9d7c60"
+    },
+    {
+      "slug": "pocketbase",
+      "name": "PocketBase",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://pocketbase.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://pocketbase.io/images/favicon/apple-touch-icon.png",
+      "previewSource": "https://pocketbase.io/images/og.png"
+    },
+    {
+      "slug": "workato",
+      "name": "Workato",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.workato.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.workato.com/favicon.ico",
+      "previewSource": "https://public-workato-files.s3.us-east-2.amazonaws.com/Uploads/workato-logo-1.png"
+    },
+    {
+      "slug": "tray-ai",
+      "name": "Tray.ai",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://tray.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://tray.ai/apple-icon.png",
+      "previewSource": "https://cdn.sanity.io/images/1ar0g01x/production/f202ff11f6469a66129fa541d79b41ccd631cbba-1200x630.png?auto=format&amp;fit=max&amp;q=100&amp;w=1200"
+    },
+    {
+      "slug": "tines",
+      "name": "Tines",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.tines.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.tines.com/icons/icon-48x48.png?v=2bb9bd334e9b509b6755a6a7ac12e40e",
+      "previewSource": "https://www.tines.com/static/tines-home-ab1e3b02efdd59946e655f8a80e85319.png"
+    },
+    {
+      "slug": "ifttt",
+      "name": "IFTTT",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://ifttt.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://web-assets.ifttt.com/builds/assets/apple-touch-icon-180x180-precomposed-BWsvgpHV.png",
+      "previewSource": "https://web-assets.ifttt.com/builds/assets/ifttt-banner-BdwHPmXv.png"
+    },
+    {
+      "slug": "kestra",
+      "name": "Kestra",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://kestra.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://kestra.io/apple-touch-icon.png",
+      "previewSource": "https://kestra.io/og-image.png"
+    },
+    {
+      "slug": "fly-io",
+      "name": "Fly.io",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://fly.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://fly.io/favicon.ico",
+      "previewSource": "https://fly.io/phx/images/preview/og-7ea9380853220ced249aaf88c2332937.jpg?vsn=d"
+    },
+    {
+      "slug": "koyeb",
+      "name": "Koyeb",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.koyeb.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.koyeb.com/favicon/apple-touch-icon.png",
+      "previewSource": "https://www.koyeb.com/og?text=High-performance%20Infrastructure%20for%20APIs,%20Inference,%20and%20Databases"
+    },
+    {
+      "slug": "northflank",
+      "name": "Northflank",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://northflank.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://northflank.com/favicon.ico",
+      "previewSource": "http://assets.northflank.com/marketing/image/meta-1200.png"
+    },
+    {
+      "slug": "aws-amplify",
+      "name": "AWS Amplify",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://aws.amazon.com/amplify/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://a0.awsstatic.com/libra-css/images/site/touch-icon-iphone-114-smile.png",
+      "previewSource": null
+    },
+    {
+      "slug": "digitalocean-app-platform",
+      "name": "DigitalOcean App Platform",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.digitalocean.com/products/app-platform",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.digitalocean.com/_next/static/media/apple-touch-icon.d7edaa01.png",
+      "previewSource": "https://www.digitalocean.com/_next/static/media/social-share-default.e8530e9e.jpeg"
+    },
+    {
+      "slug": "framer",
+      "name": "Framer",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.framer.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://framerusercontent.com/images/aXvo6HfUhqvR7oFjFL8b4AcyGfg.png",
+      "previewSource": "https://framerusercontent.com/images/yyBL8MFizGZKUd27rQGHp30fyc.jpg"
+    },
+    {
+      "slug": "softr",
+      "name": "Softr",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.softr.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.softr.io/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/6772e8855f7859bc8df95c78/69cb9d33b244d44a7d3d428c_AI%20Launch%20Image.jpg"
+    },
+    {
+      "slug": "cline",
+      "name": "Cline",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://cline.bot/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://cline.bot/assets/branding/favicons/apple-touch-icon.png",
+      "previewSource": "https://cline.bot/cline_og_img.png"
+    },
+    {
+      "slug": "neon",
+      "name": "Neon",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://neon.tech/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://neon.com/apple-touch-icon.png",
+      "previewSource": "https://neon.com/images/social-previews/index.jpg?updated=2026-01-15"
+    },
+    {
+      "slug": "vercel",
+      "name": "Vercel",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://vercel.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://assets.vercel.com/image/upload/q_auto/front/favicon/vercel/apple-touch-icon-57x57.png",
+      "previewSource": "https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/4JmubmYDJnFtstwHbaZPev/0c3576832aae5b1a4d98c8c9f98863c3/Vercel_Home_OG.png"
+    },
+    {
+      "slug": "figma",
+      "name": "Figma",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.figma.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://static.figma.com/app/icon/2/touch-76.png",
+      "previewSource": "https://cdn.sanity.io/images/599r6htc/regionalized/342e17642c7afa81206490b0dd21c3e5724ae040-2400x1260.png?w=1200&amp;q=70&amp;fit=max&amp;auto=format"
+    },
+    {
+      "slug": "openhands",
+      "name": "OpenHands",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.all-hands.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://openhands.dev/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/68ff4057b35616cdd47d5ac7/69161b32abf448a2df921a73_openhands_opengraph_01.png"
+    },
+    {
+      "slug": "xata",
+      "name": "Xata",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://xata.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://xata.io/apple-icon.png?apple-icon.0t42i7fbh47rz.png",
+      "previewSource": "https://xata.io/api/og?title=Xata%20%E2%80%93%20One%20Postgres%2C%20thousands%20of%20branches."
+    },
+    {
+      "slug": "netlify",
+      "name": "Netlify",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.netlify.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.netlify.com/favicon/apple-touch-icon.png",
+      "previewSource": "https://www.netlify.com/images/og-image-default.png"
+    },
+    {
+      "slug": "miro",
+      "name": "Miro",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://miro.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://miro.com/favicon.ico",
+      "previewSource": "https://framerusercontent.com/assets/Bab0War93Jeq5MpDPwqKFiyI.png"
+    },
+    {
+      "slug": "webflow",
+      "name": "Webflow",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://webflow.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://webflow.com/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/66e88746834b80507cdf7933/6706ef3c7215a769229d7aad_features-OG.jpg"
+    },
+    {
+      "slug": "devin",
+      "name": "Devin",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://devin.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://devin.ai/apple-icon.png",
+      "previewSource": "https://devin.ai/cover.png"
+    },
+    {
+      "slug": "n8n",
+      "name": "n8n",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://n8n.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://n8n.io/favicon.ico",
+      "previewSource": "https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-stage/assets/og_image_website_3_afd66761a9.png"
+    },
+    {
+      "slug": "cloudflare",
+      "name": "Cloudflare",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.cloudflare.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.cloudflare.com/favicon.ico",
+      "previewSource": "https://cf-assets.www.cloudflare.com/dzlvafdwdttg/5hEMO0prBW3wDvchZU0iBZ/8e05bb4c55f8906e58d09dbc861c0f22/CF_logo_horizontal_singlecolor_wht.svg"
+    },
+    {
+      "slug": "whimsical",
+      "name": "Whimsical",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://whimsical.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://whimsical.com/favicon.ico",
+      "previewSource": "https://whimsical.com/_next_public/cards/default.png"
+    },
+    {
+      "slug": "relume",
+      "name": "Relume",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.relume.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.relume.io/favicon.ico",
+      "previewSource": "https://www.relume.io/__assets/6177739448baa66404ce1d9c/65b756c9cebba152b52fccc8_Opengraph%20-%20Home%20for%20Twitter.jpg"
+    },
+    {
+      "slug": "windsurf",
+      "name": "Windsurf",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://windsurf.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://windsurf.com/favicon.png",
+      "previewSource": "https://exafunction.github.io/public/images/website_thumbnails/home.jpg"
+    },
+    {
+      "slug": "pipedream",
+      "name": "Pipedream",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://pipedream.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://pipedream.com/favicon.ico",
+      "previewSource": null
+    },
+    {
+      "slug": "railway",
+      "name": "Railway",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://railway.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://railway.com/apple-touch-icon.png",
+      "previewSource": "https://railway.com/og.png?v=2"
+    },
+    {
+      "slug": "tldraw",
+      "name": "tldraw",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.tldraw.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.tldraw.com/apple-touch-icon.png",
+      "previewSource": "https://www.tldraw.com/social-og.png"
+    },
+    {
+      "slug": "lovable",
+      "name": "Lovable",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://lovable.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://lovable.dev/apple-touch-icon.png",
+      "previewSource": "https://lovable.dev/img/opengraph-image.png"
+    },
+    {
+      "slug": "zed",
+      "name": "Zed",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://zed.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://zed.dev/favicon_black_16.png",
+      "previewSource": "https://zed.dev/img/home/og.webp"
+    },
+    {
+      "slug": "aider",
+      "name": "Aider",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://aider.chat/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://aider.chat/favicon.ico",
+      "previewSource": null
+    },
+    {
+      "slug": "render",
+      "name": "Render",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://render.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://render.com/icon.svg?e6fbdd2e217c0064",
+      "previewSource": "https://cdn.sanity.io/images/hvk0tap5/production/a3528e77b010804af14908fab79f826d66437620-1600x900.png?fit=max&amp;auto=format"
+    },
+    {
+      "slug": "excalidraw",
+      "name": "Excalidraw",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://excalidraw.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://excalidraw.com/apple-touch-icon.png",
+      "previewSource": "https://excalidraw.com/og-image-3.png"
+    },
+    {
+      "slug": "replit",
+      "name": "Replit",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://replit.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://replit.com/public/icons/favicon-prompt-192-rebrand.png",
+      "previewSource": "https://replit.com/public/images/opengraph_rebrand.jpg"
+    },
+    {
+      "slug": "trae",
+      "name": "Trae",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.trae.ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://lf-static.traecdn.us/obj/trae-ai-tx/trae_website/favicon.png",
+      "previewSource": "https://lf-static.traecdn.us/obj/trae-ai-tx/trae_website/og.jpeg"
+    },
+    {
+      "slug": "supabase",
+      "name": "Supabase",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://supabase.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://supabase.com/favicon/apple-icon-57x57.png",
+      "previewSource": "https://supabase.com/images/og/supabase-og.png"
+    },
+    {
+      "slug": "make",
+      "name": "Make",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.make.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": null,
+      "previewSource": null,
+      "error": "Failed to fetch https://www.make.com/: 403 Forbidden"
+    },
+    {
+      "slug": "v0",
+      "name": "v0",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://v0.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://v0.app/assets/apple-icon.png",
+      "previewSource": "https://v0.app/chat/api/og"
+    },
+    {
+      "slug": "bubble",
+      "name": "Bubble",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://bubble.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://meta-q.cdn.bubble.io/cdn-cgi/image/w=192,h=,f=auto,dpr=1,fit=contain/f1534423790492x745180500205606300/icon_512x512%402x.png",
+      "previewSource": "https://meta-q.cdn.bubble.io/cdn-cgi/image/w=,h=,f=auto,dpr=1,fit=contain/f1762463484754x595287411041153000/Bubbleio%20opengraph.png"
+    },
+    {
+      "slug": "jetbrains-ai-assistant",
+      "name": "JetBrains AI Assistant",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.jetbrains.com/ai/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.jetbrains.com/apple-touch-icon.png?r=1234",
+      "previewSource": "https://resources.jetbrains.com/storage/products/ai/img/meta/ai_solutions_preview.png"
+    },
+    {
+      "slug": "firebase",
+      "name": "Firebase",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://firebase.google.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.gstatic.com/devrel-devsite/prod/v2f052e0cca7362dede225b85c12aee59eabee5b8fbb05d44fc345ffb54861aec/firebase/images/touchicon-180.png",
+      "previewSource": "https://firebase.google.com/images/social.png"
+    },
+    {
+      "slug": "zapier",
+      "name": "Zapier",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://zapier.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://zapier.com/favicon.ico",
+      "previewSource": "https://res.cloudinary.com/zapier-media/image/upload/q_auto/f_auto/v1776210705/Governance/og-image-homepage_mskeaq.png"
+    },
+    {
+      "slug": "bolt",
+      "name": "Bolt",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://bolt.new/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://bolt.new/static/apple-touch-icon.png",
+      "previewSource": "https://bolt.new/static/social_preview_index.jpg"
+    },
+    {
+      "slug": "flutterflow",
+      "name": "FlutterFlow",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://flutterflow.io/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.flutterflow.io/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/66b33f0fd430d8b41d25ad4c/66e53a4df0ccaa6615d3de90_Social%20Share%20Image-min.png"
+    },
+    {
+      "slug": "claude-code",
+      "name": "Claude Code",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.anthropic.com/claude-code/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://claude.com/favicon.ico",
+      "previewSource": "https://cdn.prod.website-files.com/6889473510b50328dbb70ae6/68c469d23594abeb9ab6ee48_70ed020ecf8fa028b9bc95fa819720b6_og_claude-generic.jpg"
+    },
+    {
+      "slug": "convex",
+      "name": "Convex",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.convex.dev/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.convex.dev/favicon.ico?favicon.16gdd_01g_a~f.ico",
+      "previewSource": "https://www.convex.dev/api/og?title=The%20backend%20platform%20that%20keeps%20your%20app%20in%20sync"
+    },
+    {
+      "slug": "activepieces",
+      "name": "Activepieces",
+      "channelType": "vibe-tools",
+      "websiteUrl": "https://www.activepieces.com/",
+      "currentLogoUrl": "/placeholder-logo.svg",
+      "currentPreviewImageUrl": "/placeholder.jpg",
+      "logoSource": "https://www.activepieces.com/logo-180.png",
+      "previewSource": "https://www.activepieces.com/meta1.png"
+    }
+  ]
+}

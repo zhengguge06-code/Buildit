@@ -25,7 +25,7 @@ const channels: ChannelInfo[] = [
   {
     href: "/vibe-products",
     title: "Vibe 产品",
-    description: "看别人已经做出了什么成品，并从优秀案例里拆表达、结构、转化和品牌灵感。",
+    description: "先看有哪些产品类型，再看它们还值得借鉴哪里，适合找对标、找样板和拆参考点。",
     eyebrow: "灵感",
     Icon: Lightbulb,
   },
@@ -62,13 +62,13 @@ export default function HomePageClient({
             <h1 className="mt-8 font-serif text-5xl font-medium leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
               做产品，看工具。
               <br className="hidden md:block" />
-              找灵感，看产品。
+              看类型，拆产品。
             </h1>
           </FadeInUp>
 
           <FadeInUp delay={0.2}>
             <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              首页只负责把你带到正确的频道里。做东西时去看 Vibe 工具，找方向和案例时去看 Vibe 产品。
+              首页只负责把你带到正确的频道里。做东西时去看 Vibe 工具；找对标、看产品类型和拆参考点时去看 Vibe 产品。
             </p>
           </FadeInUp>
 

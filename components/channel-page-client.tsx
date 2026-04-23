@@ -39,10 +39,7 @@ export default function ChannelPageClient({
     icon.startsWith("/") ||
     icon.startsWith("data:image/")
 
-  const placeholderText =
-    channel.id === "vibe-products"
-      ? "这个板块先预留，等我们整理好产品口径后再开放展示。"
-      : "这个板块先预留，等我们整理好展示规则后再开放。"
+  const placeholderText = "这个板块先预留，等我们把精选和热度规则补齐后再开放。"
 
   return (
     <div className="flex">

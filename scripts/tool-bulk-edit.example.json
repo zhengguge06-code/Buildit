@@ -1,0 +1,15 @@
+[
+  {
+    "channel_type": "vibe-tools",
+    "name": "GitHub Copilot",
+    "slug": "github-copilot",
+    "description": "覆盖编辑器、命令行和 GitHub 工作流的 AI 编码助手。",
+    "full_description": "GitHub Copilot 把 AI 编码能力带到编辑器、终端和 GitHub 工作流里，适合持续协作式开发。",
+    "website_url": "https://github.com/features/copilot",
+    "logo_url": "/placeholder-logo.svg",
+    "preview_image_url": "/placeholder.jpg",
+    "category_name": "AI 编程环境",
+    "status": "published",
+    "published_at": "2026-04-21T09:14:00.000Z"
+  }
+]

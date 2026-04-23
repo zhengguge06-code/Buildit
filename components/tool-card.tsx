@@ -4,13 +4,24 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import type { ToolSummary } from "@/lib/ai-tools"
 
 interface ToolCardProps {
   tool: ToolSummary
 }
 
+const MAX_VISIBLE_BADGES = 4
+
+function getDisplayBadges(tool: ToolSummary) {
+  return [...tool.referenceBadges, ...tool.capabilityBadges, ...tool.platformBadges]
+}
+
 export default function ToolCard({ tool }: ToolCardProps) {
+  const badges = getDisplayBadges(tool)
+  const visibleBadges = badges.slice(0, MAX_VISIBLE_BADGES)
+  const hiddenBadgeCount = Math.max(0, badges.length - visibleBadges.length)
+
   return (
     <motion.div
       whileHover={{ y: -4 }}
@@ -46,6 +57,21 @@ export default function ToolCard({ tool }: ToolCardProps) {
         <p className="line-clamp-2 flex-1 text-sm leading-6 text-muted-foreground">
           {tool.description}
         </p>
+
+        {badges.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {visibleBadges.map((badge) => (
+              <Badge key={`${tool.slug}-${badge}`} variant="soft" className="text-[11px]">
+                {badge}
+              </Badge>
+            ))}
+            {hiddenBadgeCount > 0 ? (
+              <Badge variant="outline" className="text-[11px] text-muted-foreground">
+                +{hiddenBadgeCount}
+              </Badge>
+            ) : null}
+          </div>
+        ) : null}
       </Link>
     </motion.div>
   )

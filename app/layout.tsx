@@ -22,7 +22,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: "Vibe Hub · 做产品，看工具",
-  description: "围绕 Vibe 工具与 Vibe 产品的整合站入口。做产品时去看 Vibe 工具，找方向时去看 Vibe 产品。",
+  description: "围绕 Vibe 工具与 Vibe 产品的整合站入口。做产品时去看 Vibe 工具；看产品类型、找对标和拆参考点时去看 Vibe 产品。",
   generator: "Vibe Hub",
 }
 

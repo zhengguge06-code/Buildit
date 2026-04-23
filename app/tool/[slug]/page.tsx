@@ -24,6 +24,12 @@ function isPlaceholderAssetUrl(value: string | null | undefined) {
   return PLACEHOLDER_ASSET_SEGMENTS.some((segment) => value.includes(segment))
 }
 
+const badgeGroups = [
+  { key: "reference", label: "值得借鉴", badgeKey: "referenceBadges" },
+  { key: "capability", label: "能力特征", badgeKey: "capabilityBadges" },
+  { key: "platform", label: "平台形态", badgeKey: "platformBadges" },
+] as const
+
 export default async function ToolPage({ params }: ToolPageProps) {
   const { slug } = await params
   const tool = await getToolDetailBySlug(slug)
@@ -119,6 +125,30 @@ export default async function ToolPage({ params }: ToolPageProps) {
         <p className="mt-8 text-lg leading-relaxed text-muted-foreground">
           {tool.description}
         </p>
+
+        {badgeGroups.some(({ badgeKey }) => tool[badgeKey].length > 0) ? (
+          <div className="mt-8 rounded-3xl border border-border/70 bg-card/80 p-5 shadow-warm-sm">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+              产品参考点
+            </p>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              {badgeGroups.map(({ key, label, badgeKey }) =>
+                tool[badgeKey].length > 0 ? (
+                  <div key={key}>
+                    <p className="text-sm font-medium text-foreground">{label}</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {tool[badgeKey].map((badge) => (
+                        <Badge key={`${key}-${badge}`} variant={key === "reference" ? "soft" : "outline"}>
+                          {badge}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ) : null
+              )}
+            </div>
+          </div>
+        ) : null}
 
         {/* Info grid */}
         <div className="mt-8 grid gap-3 md:grid-cols-3">

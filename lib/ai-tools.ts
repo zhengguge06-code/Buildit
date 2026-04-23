@@ -2,6 +2,10 @@ import { fallbackCategories, fallbackTools, getFallbackToolBySlug } from "@/lib/
 import { createClient } from "@/lib/supabase/server"
 import { curatedCategorySortOrders, curatedExtraTools, curatedToolOverrides } from "@/lib/tool-overrides"
 import { hasSupabaseEnv } from "@/lib/utils"
+import {
+  canonicalVibeProductCategories,
+  getVibeProductPresentation,
+} from "@/lib/vibe-product-categories"
 
 export type ChannelType = "vibe-tools" | "vibe-products"
 
@@ -35,6 +39,9 @@ export type ToolSummary = {
   isHot: boolean
   isNew: boolean
   isEditorial: boolean
+  referenceBadges: string[]
+  capabilityBadges: string[]
+  platformBadges: string[]
 }
 
 export type ToolDetail = ToolSummary & {
@@ -88,6 +95,9 @@ type RawToolRow = {
   published_at?: string | null
   created_at?: string | null
   user_id?: string | null
+  reference_badges?: string[] | null
+  capability_badges?: string[] | null
+  platform_badges?: string[] | null
 }
 
 type RawLegacyToolRow = {
@@ -120,37 +130,9 @@ export const CHANNELS: Record<ChannelType, ChannelConfig> = {
     href: "/vibe-products",
     navLabel: "Vibe 产品",
     title: "Vibe 产品",
-    description: "这里不是基础工具榜单，而是看别人已经做出了什么产品，并从中拆界面、交互、结构、转化和品牌灵感。",
+    description: "先看这是什么类型的产品，再看它还值得借鉴哪里。这里按产品类型浏览案例，再用 badge 补充首页、结构、增长和平台参考点。",
     eyebrow: "See What Others Have Built",
   },
-}
-
-const VIBE_PRODUCT_CATEGORY_OVERRIDES: Record<string, string> = {
-  linear: "product-interface",
-  raycast: "product-interface",
-  notion: "product-interface",
-  granola: "product-interface",
-  arc: "product-interface",
-}
-
-const CANONICAL_VIBE_PRODUCT_CATEGORY_NAME_MAP: Record<string, string> = {
-  "界面表现": "product-interface",
-  "交互体验": "product-interaction",
-  "产品结构": "product-structure",
-  "商业转化": "product-conversion",
-  "增长运营": "product-growth",
-  "品牌表达": "product-brand",
-}
-
-const LEGACY_VIBE_PRODUCT_CATEGORY_NAME_MAP: Record<string, string> = {
-  "AI Web 应用": "product-structure",
-  "SaaS 产品": "product-structure",
-  "作品集": "product-brand",
-  "内容工具": "product-structure",
-  "导航站": "product-growth",
-  "效率产品": "product-interaction",
-  "社区平台": "product-growth",
-  "落地页": "product-conversion",
 }
 
 function normalizeSlugParam(slug: string) {
@@ -423,40 +405,29 @@ function mapFallbackCategory(row: (typeof fallbackCategories)[number]): ToolCate
   }
 }
 
+function getFallbackToolBadges(tool: (typeof fallbackTools)[number]) {
+  const fallbackTool = tool as {
+    referenceBadges?: readonly string[]
+    capabilityBadges?: readonly string[]
+    platformBadges?: readonly string[]
+  }
+
+  return {
+    referenceBadges: fallbackTool.referenceBadges ? [...fallbackTool.referenceBadges] : [],
+    capabilityBadges: fallbackTool.capabilityBadges ? [...fallbackTool.capabilityBadges] : [],
+    platformBadges: fallbackTool.platformBadges ? [...fallbackTool.platformBadges] : [],
+  }
+}
+
 function buildCategoryMap(categories: ToolCategory[]) {
   return new Map(categories.map((category) => [category.id, category]))
 }
 
 function getCanonicalVibeProductCategories() {
-  return fallbackCategories
-    .filter((category) => normalizeChannelType(category.channelType) === "vibe-products")
-    .map(mapFallbackCategory)
-}
-
-function resolveVibeProductCategoryId(
-  slug: string,
-  categoryId: string,
-  rawCategoryMap: Map<string, RawCategoryRow>
-) {
-  const slugOverride = VIBE_PRODUCT_CATEGORY_OVERRIDES[slug]
-
-  if (slugOverride) {
-    return slugOverride
-  }
-
-  const rawCategory = rawCategoryMap.get(categoryId)
-
-  if (!rawCategory) {
-    return "product-structure"
-  }
-
-  const canonicalCategory = CANONICAL_VIBE_PRODUCT_CATEGORY_NAME_MAP[rawCategory.name]
-
-  if (canonicalCategory) {
-    return canonicalCategory
-  }
-
-  return LEGACY_VIBE_PRODUCT_CATEGORY_NAME_MAP[rawCategory.name] ?? "product-structure"
+  return canonicalVibeProductCategories.map((category) => ({
+    ...category,
+    channelType: "vibe-products" as ChannelType,
+  }))
 }
 
 function mapToolRecord(
@@ -467,14 +438,29 @@ function mapToolRecord(
     description: string
     logo?: string | null
     categoryId: string
+    categoryName?: string | null
     channelType: ChannelType
     publishedAt?: string | null
     weeklyViews?: number
     isEditorial?: boolean
+    referenceBadges?: string[] | null
+    capabilityBadges?: string[] | null
+    platformBadges?: string[] | null
   },
   categoryMap: Map<string, ToolCategory>
 ): ToolSummary {
-  const category = categoryMap.get(record.categoryId)
+  const vibeProductPresentation =
+    record.channelType === "vibe-products"
+      ? getVibeProductPresentation({
+          slug: record.slug,
+          categoryId: record.categoryId,
+          categoryName: record.categoryName,
+          referenceBadges: record.referenceBadges,
+          capabilityBadges: record.capabilityBadges,
+          platformBadges: record.platformBadges,
+        })
+      : null
+  const category = vibeProductPresentation?.category ?? categoryMap.get(record.categoryId)
   const publishedAt = record.publishedAt ?? null
   const weeklyViews = record.weeklyViews ?? 0
   const isEditorial = record.isEditorial ?? false
@@ -486,13 +472,16 @@ function mapToolRecord(
     description: record.description,
     logo: record.logo || "/placeholder.svg",
     category: category?.name || "未分类",
-    categoryId: record.categoryId,
+    categoryId: category?.id || record.categoryId,
     channelType: record.channelType,
     publishedAt,
     weeklyViews,
     isHot: weeklyViews > 0,
     isNew: !isEditorial && isWithinRecentWindow(publishedAt),
     isEditorial,
+    referenceBadges: vibeProductPresentation?.referenceBadges ?? [],
+    capabilityBadges: vibeProductPresentation?.capabilityBadges ?? [],
+    platformBadges: vibeProductPresentation?.platformBadges ?? [],
   })
 }
 
@@ -527,8 +516,10 @@ function buildFallbackChannelPageData(channelType: ChannelType): ChannelPageData
 
   const tools = fallbackTools
     .filter((tool) => normalizeChannelType(tool.channelType) === channelType && tool.status === "published")
-    .map((tool) =>
-      mapToolRecord(
+    .map((tool) => {
+      const badges = getFallbackToolBadges(tool)
+
+      return mapToolRecord(
         {
           id: tool.id,
           name: tool.name,
@@ -540,10 +531,13 @@ function buildFallbackChannelPageData(channelType: ChannelType): ChannelPageData
           publishedAt: tool.publishedAt,
           weeklyViews: tool.weeklyViews,
           isEditorial: true,
+          referenceBadges: badges.referenceBadges,
+          capabilityBadges: badges.capabilityBadges,
+          platformBadges: badges.platformBadges,
         },
         categoryMap
       )
-    )
+    })
 
   return buildChannelPageData(channelType, categories, mergeCuratedTools(channelType, categories, tools))
 }
@@ -590,7 +584,6 @@ async function fetchNewSchemaChannelPageData(
   }
 
   const rawCategories = categoryData as RawCategoryRow[]
-  const rawCategoryMap = new Map(rawCategories.map((row) => [row.id, row]))
   const categories =
     channelType === "vibe-products"
       ? getCanonicalVibeProductCategories()
@@ -613,7 +606,10 @@ async function fetchNewSchemaChannelPageData(
         status,
         published_at,
         created_at,
-        user_id
+        user_id,
+        reference_badges,
+        capability_badges,
+        platform_badges
       `
     )
     .eq("channel_type", channelType)
@@ -639,14 +635,14 @@ async function fetchNewSchemaChannelPageData(
         slug: tool.slug,
         description: tool.description,
         logo: tool.logo_url,
-        categoryId:
-          channelType === "vibe-products"
-            ? resolveVibeProductCategoryId(tool.slug, tool.category_id, rawCategoryMap)
-            : tool.category_id,
+        categoryId: tool.category_id,
         channelType: normalizeChannelType(tool.channel_type),
         publishedAt: tool.published_at || tool.created_at || null,
         weeklyViews: viewCountMap.get(tool.id) ?? 0,
         isEditorial: !tool.user_id,
+        referenceBadges: tool.reference_badges,
+        capabilityBadges: tool.capability_badges,
+        platformBadges: tool.platform_badges,
       },
       categoryMap
     )
@@ -742,7 +738,10 @@ async function fetchNewSchemaToolDetail(supabase: SupabaseServerClient, slug: st
         status,
         published_at,
         created_at,
-        user_id
+        user_id,
+        reference_badges,
+        capability_badges,
+        platform_badges
       `
     )
     .eq("slug", slug)
@@ -762,19 +761,17 @@ async function fetchNewSchemaToolDetail(supabase: SupabaseServerClient, slug: st
     .eq("id", tool.category_id)
     .maybeSingle()
 
-  const rawCategoryMap = new Map<string, RawCategoryRow>()
-  if (categoryResponse.data) {
-    rawCategoryMap.set(tool.category_id, categoryResponse.data as RawCategoryRow)
-  }
-
   const category =
     channelType === "vibe-products"
-      ? buildCategoryMap(getCanonicalVibeProductCategories()).get(
-          resolveVibeProductCategoryId(tool.slug, tool.category_id, rawCategoryMap)
-        ) ?? {
-          id: "product-structure",
-          name: "产品结构",
-          icon: "🧭",
+      ? {
+          ...getVibeProductPresentation({
+            slug: tool.slug,
+            categoryId: tool.category_id,
+            categoryName: (categoryResponse.data as RawCategoryRow | null)?.name ?? null,
+            referenceBadges: tool.reference_badges,
+            capabilityBadges: tool.capability_badges,
+            platformBadges: tool.platform_badges,
+          }).category,
           channelType,
         }
       : categoryResponse.data
@@ -794,10 +791,14 @@ async function fetchNewSchemaToolDetail(supabase: SupabaseServerClient, slug: st
       description: tool.description,
       logo: tool.logo_url,
       categoryId: category.id,
+      categoryName: category.name,
       channelType,
       publishedAt: tool.published_at || tool.created_at || null,
       weeklyViews: 0,
       isEditorial: !tool.user_id,
+      referenceBadges: tool.reference_badges,
+      capabilityBadges: tool.capability_badges,
+      platformBadges: tool.platform_badges,
     },
     buildCategoryMap([category])
   )
@@ -911,6 +912,7 @@ function buildFallbackToolDetail(slug: string): ToolDetail | null {
       publishedAt: fallbackTool.publishedAt,
       weeklyViews: fallbackTool.weeklyViews,
       isEditorial: true,
+      ...getFallbackToolBadges(fallbackTool),
     },
     buildCategoryMap([mappedCategory])
   )
@@ -951,7 +953,6 @@ async function fetchAllSearchableToolsFromNewSchema(supabase: SupabaseServerClie
 
   const categoryResponse = await supabase.from("tool_categories").select("id, name, icon, channel_type")
   const rawCategories = (categoryResponse.data as RawCategoryRow[] | null) ?? []
-  const rawCategoryMap = new Map(rawCategories.map((row) => [row.id, row]))
 
   const categoryMap = buildCategoryMap([
     ...rawCategories
@@ -962,24 +963,26 @@ async function fetchAllSearchableToolsFromNewSchema(supabase: SupabaseServerClie
 
   return dedupeBySlug([
     ...(data as RawToolRow[]).map((tool) => {
-    const channelType = normalizeChannelType(tool.channel_type)
-    const displayCategoryId =
-      channelType === "vibe-products"
-        ? resolveVibeProductCategoryId(tool.slug, tool.category_id, rawCategoryMap)
-        : tool.category_id
-    const category = categoryMap.get(displayCategoryId)
+      const channelType = normalizeChannelType(tool.channel_type)
+      const category =
+        channelType === "vibe-products"
+          ? getVibeProductPresentation({
+              slug: tool.slug,
+              categoryId: tool.category_id,
+            }).category
+          : categoryMap.get(tool.category_id)
 
-    return applyCuratedSummaryOverride({
-      id: tool.id,
-      name: tool.name,
-      slug: tool.slug,
-      description: tool.description,
-      category: category?.name || "未分类",
-      channelLabel: getChannelLabel(channelType),
-      channelType,
-      logo: tool.logo_url || "/placeholder.svg",
-    })
-  }),
+      return applyCuratedSummaryOverride({
+        id: tool.id,
+        name: tool.name,
+        slug: tool.slug,
+        description: tool.description,
+        category: category?.name || "未分类",
+        channelLabel: getChannelLabel(channelType),
+        channelType,
+        logo: tool.logo_url || "/placeholder.svg",
+      })
+    }),
     ...curatedExtraTools
       .filter((tool) => tool.channelType === "vibe-tools")
       .map((tool) => ({

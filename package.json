@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tools:assets:generate": "node scripts/generate-tool-assets-manifest.cjs",
+    "tools:assets:import": "node scripts/import-tool-assets.mjs",
+    "tools:export": "node scripts/export-tools-for-edit.cjs",
+    "tools:sync-curated": "node scripts/sync-curated-tools-to-db.cjs",
+    "tools:upsert": "node scripts/upsert-tools-from-json.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
