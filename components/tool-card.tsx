@@ -13,6 +13,8 @@ interface ToolCardProps {
 
 const MAX_VISIBLE_BADGES = 4
 
+const spring = { type: "spring", stiffness: 400, damping: 25 } as const
+
 function getDisplayBadges(tool: ToolSummary) {
   return [...tool.referenceBadges, ...tool.capabilityBadges, ...tool.platformBadges]
 }
@@ -24,8 +26,11 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      whileHover="hover"
+      initial="initial"
+      animate="initial"
+      variants={{ initial: { y: 0 }, hover: { y: -6 } }}
+      transition={spring}
       className="h-full"
     >
       <Link
@@ -33,14 +38,18 @@ export default function ToolCard({ tool }: ToolCardProps) {
         className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl border border-border/70 bg-card p-5 shadow-warm-sm transition-all duration-300 hover:border-primary/40 hover:shadow-warm"
       >
         <div className="flex items-start gap-4">
-          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-background/60">
+          <motion.div
+            variants={{ initial: { scale: 1, rotate: 0 }, hover: { scale: 1.08, rotate: -4 } }}
+            transition={spring}
+            className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-background/60"
+          >
             <Image
               src={tool.logo}
               alt={tool.name}
               fill
               className="object-contain p-1.5"
             />
-          </div>
+          </motion.div>
 
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
@@ -51,7 +60,12 @@ export default function ToolCard({ tool }: ToolCardProps) {
             </h3>
           </div>
 
-          <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
+          <motion.div
+            variants={{ initial: { x: 0, y: 0 }, hover: { x: 2, y: -2 } }}
+            transition={spring}
+          >
+            <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-300 group-hover:text-primary" />
+          </motion.div>
         </div>
 
         <p className="line-clamp-2 flex-1 text-sm leading-6 text-muted-foreground">

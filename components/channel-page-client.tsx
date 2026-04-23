@@ -10,7 +10,6 @@ import { FadeInUp } from "@/components/motion/fade"
 import type { ChannelPageData } from "@/lib/ai-tools"
 
 type ChannelPageClientProps = ChannelPageData
-const CATEGORY_DISPLAY_LIMIT = 10
 
 export default function ChannelPageClient({
   channel,
@@ -99,7 +98,7 @@ export default function ChannelPageClient({
 
             <div className="mt-8 space-y-14">
               {categories.map((category) => {
-                const categoryTools = (toolsByCategory[category.id] ?? []).slice(0, CATEGORY_DISPLAY_LIMIT)
+                const categoryTools = toolsByCategory[category.id] ?? []
 
                 return (
                   <section

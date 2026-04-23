@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { Search } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import { Input } from "@/components/ui/input"
 import type { SearchableTool } from "@/lib/ai-tools"
 
@@ -74,32 +75,46 @@ export function HeaderSearch({ tools }: HeaderSearchProps) {
         />
       </form>
 
-      {isOpen && normalizedKeyword.length > 0 ? (
-        <div className="absolute top-12 z-50 w-full overflow-hidden rounded-2xl border border-border/70 bg-card shadow-warm-lg">
-          {results.length > 0 ? (
-            <div className="py-1.5">
-              {results.map((tool) => (
-                <Link
-                  key={tool.id}
-                  href={`/tool/${tool.slug}`}
-                  className="block px-4 py-2.5 transition-colors hover:bg-primary/8"
-                  onClick={() => {
-                    setIsOpen(false)
-                    setKeyword("")
-                  }}
-                >
-                  <div className="text-sm font-medium text-foreground">{tool.name}</div>
-                  <div className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
-                    <span className="text-primary">{tool.channelLabel}</span> · {tool.category} · {tool.description}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="px-4 py-4 text-sm text-muted-foreground">没有找到匹配的条目</div>
-          )}
-        </div>
-      ) : null}
+      <AnimatePresence>
+        {isOpen && normalizedKeyword.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="absolute top-12 z-50 w-full overflow-hidden rounded-2xl border border-border/70 bg-card shadow-warm-lg"
+          >
+            {results.length > 0 ? (
+              <div className="py-1.5">
+                {results.map((tool, i) => (
+                  <motion.div
+                    key={tool.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04, type: "spring", stiffness: 400, damping: 30 }}
+                  >
+                    <Link
+                      href={`/tool/${tool.slug}`}
+                      className="block px-4 py-2.5 transition-colors hover:bg-primary/8"
+                      onClick={() => {
+                        setIsOpen(false)
+                        setKeyword("")
+                      }}
+                    >
+                      <div className="text-sm font-medium text-foreground">{tool.name}</div>
+                      <div className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+                        <span className="text-primary">{tool.channelLabel}</span> · {tool.category} · {tool.description}
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="px-4 py-4 text-sm text-muted-foreground">没有找到匹配的条目</div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

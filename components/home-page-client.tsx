@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { ArrowRight, Sparkles, Wrench, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeInUp, StaggerGrid, StaggerItem } from "@/components/motion/fade"
@@ -31,6 +32,101 @@ const channels: ChannelInfo[] = [
   },
 ]
 
+function ScatterChar({ char, mousePos }: { char: string; mousePos: { x: number; y: number } | null }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const springX = useSpring(x, { stiffness: 400, damping: 28 })
+  const springY = useSpring(y, { stiffness: 400, damping: 28 })
+
+  useEffect(() => {
+    if (!mousePos || !ref.current) {
+      x.set(0)
+      y.set(0)
+      return
+    }
+    const rect = ref.current.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = cx - mousePos.x
+    const dy = cy - mousePos.y
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    const radius = 72
+    if (dist < radius) {
+      const force = (1 - dist / radius) * 18
+      x.set((dx / dist) * force)
+      y.set((dy / dist) * force)
+    } else {
+      x.set(0)
+      y.set(0)
+    }
+  }, [mousePos, x, y])
+
+  return (
+    <motion.span ref={ref} style={{ x: springX, y: springY, display: "inline-block" }}>
+      {char}
+    </motion.span>
+  )
+}
+
+function TiltCard({ href, title, description, eyebrow, Icon }: ChannelInfo) {
+  const ref = useRef<HTMLDivElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const springConfig = { stiffness: 300, damping: 30 }
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), springConfig)
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), springConfig)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    x.set((e.clientX - rect.left) / rect.width - 0.5)
+    y.set((e.clientY - rect.top) / rect.height - 0.5)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <div ref={ref} style={{ perspective: "1000px" }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+      <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>
+        <Link
+          href={href}
+          className="group relative block h-full rounded-3xl border border-border/70 bg-card p-8 shadow-warm transition-all duration-300 hover:border-primary/40 hover:shadow-warm-lg md:p-10"
+        >
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+          <div className="flex flex-col gap-8" style={{ transform: "translateZ(24px)" }}>
+            <div className="flex items-start justify-between">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                <Icon className="h-6 w-6" strokeWidth={1.6} />
+              </div>
+              <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+                {eyebrow}
+              </span>
+            </div>
+            <div>
+              <h2 className="font-serif text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                {title}
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-muted-foreground">{description}</p>
+            </div>
+            <div className="flex items-center justify-between border-t border-border/50 pt-6 text-sm">
+              <span className="text-muted-foreground">进入频道</span>
+              <span className="inline-flex items-center gap-2 font-medium text-primary">
+                查看内容
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+              </span>
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+    </div>
+  )
+}
+
 interface HomePageClientProps {
   toolsCount?: number
   productsCount?: number
@@ -42,6 +138,17 @@ export default function HomePageClient({
   productsCount,
   categoriesCount,
 }: HomePageClientProps = {}) {
+  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null)
+  const heroRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    setMousePos({ x: e.clientX, y: e.clientY })
+  }
+  const handleMouseLeave = () => setMousePos(null)
+
+  const line1 = "做产品，看工具。"
+  const line2 = "看类型，拆产品。"
+
   return (
     <div className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
@@ -59,10 +166,23 @@ export default function HomePageClient({
           </FadeInUp>
 
           <FadeInUp delay={0.1}>
-            <h1 className="mt-8 font-serif text-5xl font-medium leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-              做产品，看工具。
-              <br className="hidden md:block" />
-              看类型，拆产品。
+            <h1
+              ref={heroRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="mt-8 font-serif text-5xl font-medium leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl"
+            >
+              <span className="block">
+                {line1.split("").map((char, i) => (
+                  <ScatterChar key={`l1-${i}`} char={char} mousePos={mousePos} />
+                ))}
+              </span>
+              <span className="hidden md:block">
+                {line2.split("").map((char, i) => (
+                  <ScatterChar key={`l2-${i}`} char={char} mousePos={mousePos} />
+                ))}
+              </span>
+              <span className="md:hidden">{line2}</span>
             </h1>
           </FadeInUp>
 
@@ -88,44 +208,9 @@ export default function HomePageClient({
         </div>
 
         <StaggerGrid className="mt-20 grid gap-6 lg:grid-cols-2">
-          {channels.map(({ href, title, description, eyebrow, Icon }) => (
-            <StaggerItem key={href}>
-              <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.3 }}>
-                <Link
-                  href={href}
-                  className="group relative block h-full overflow-hidden rounded-3xl border border-border/70 bg-card p-8 shadow-warm transition-all duration-300 hover:border-primary/40 hover:shadow-warm-lg md:p-10"
-                >
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-
-                  <div className="flex flex-col gap-8">
-                    <div className="flex items-start justify-between">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                        <Icon className="h-6 w-6" strokeWidth={1.6} />
-                      </div>
-                      <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
-                        {eyebrow}
-                      </span>
-                    </div>
-
-                    <div>
-                      <h2 className="font-serif text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-                        {title}
-                      </h2>
-                      <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                        {description}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between border-t border-border/50 pt-6 text-sm">
-                      <span className="text-muted-foreground">进入频道</span>
-                      <span className="inline-flex items-center gap-2 font-medium text-primary">
-                        查看内容
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
+          {channels.map((channel) => (
+            <StaggerItem key={channel.href}>
+              <TiltCard {...channel} />
             </StaggerItem>
           ))}
         </StaggerGrid>

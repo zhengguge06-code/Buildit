@@ -423,6 +423,10 @@ function buildCategoryMap(categories: ToolCategory[]) {
   return new Map(categories.map((category) => [category.id, category]))
 }
 
+function buildRawCategoryNameMap(categories: RawCategoryRow[]) {
+  return new Map(categories.map((category) => [category.id, normalizeCategoryName(category.name)]))
+}
+
 function getCanonicalVibeProductCategories() {
   return canonicalVibeProductCategories.map((category) => ({
     ...category,
@@ -584,6 +588,7 @@ async function fetchNewSchemaChannelPageData(
   }
 
   const rawCategories = categoryData as RawCategoryRow[]
+  const rawCategoryNameById = buildRawCategoryNameMap(rawCategories)
   const categories =
     channelType === "vibe-products"
       ? getCanonicalVibeProductCategories()
@@ -636,6 +641,7 @@ async function fetchNewSchemaChannelPageData(
         description: tool.description,
         logo: tool.logo_url,
         categoryId: tool.category_id,
+        categoryName: rawCategoryNameById.get(tool.category_id) ?? null,
         channelType: normalizeChannelType(tool.channel_type),
         publishedAt: tool.published_at || tool.created_at || null,
         weeklyViews: viewCountMap.get(tool.id) ?? 0,
@@ -953,6 +959,7 @@ async function fetchAllSearchableToolsFromNewSchema(supabase: SupabaseServerClie
 
   const categoryResponse = await supabase.from("tool_categories").select("id, name, icon, channel_type")
   const rawCategories = (categoryResponse.data as RawCategoryRow[] | null) ?? []
+  const rawCategoryNameById = buildRawCategoryNameMap(rawCategories)
 
   const categoryMap = buildCategoryMap([
     ...rawCategories
@@ -969,6 +976,7 @@ async function fetchAllSearchableToolsFromNewSchema(supabase: SupabaseServerClie
           ? getVibeProductPresentation({
               slug: tool.slug,
               categoryId: tool.category_id,
+              categoryName: rawCategoryNameById.get(tool.category_id) ?? null,
             }).category
           : categoryMap.get(tool.category_id)
 

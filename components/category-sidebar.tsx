@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { Plus, Tag } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
@@ -49,21 +50,35 @@ export default function CategorySidebar({
             {categories.map((category) => {
               const isActive = activeCategory === category.id
               return (
-                <button
+                <motion.button
                   key={category.id}
                   type="button"
                   onClick={() => onCategoryClick(category.id)}
+                  whileTap={{ scale: 0.97 }}
                   className={cn(
-                    "group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-all",
+                    "group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors duration-150",
                     isActive
                       ? "bg-primary/10 text-foreground"
                       : "text-muted-foreground hover:bg-primary/5 hover:text-foreground"
                   )}
                 >
-                  {isActive && (
-                    <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-primary" />
-                  )}
-                  <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center text-base">
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.span
+                        layoutId="active-indicator"
+                        className="absolute left-0 top-0 h-full w-0.5 rounded-r-full bg-primary"
+                        initial={{ opacity: 0, scaleY: 0.5 }}
+                        animate={{ opacity: 1, scaleY: 1 }}
+                        exit={{ opacity: 0, scaleY: 0.5 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </AnimatePresence>
+                  <motion.span
+                    animate={{ scale: isActive ? 1.15 : 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    className="inline-flex h-5 w-5 shrink-0 items-center justify-center text-base"
+                  >
                     {isImageIcon(category.icon) ? (
                       <Image
                         src={category.icon}
@@ -75,11 +90,11 @@ export default function CategorySidebar({
                     ) : (
                       <span className="leading-none">{category.icon || "•"}</span>
                     )}
-                  </span>
+                  </motion.span>
                   <span className={cn("flex-1 truncate", isActive && "font-medium")}>
                     {category.name}
                   </span>
-                </button>
+                </motion.button>
               )
             })}
           </nav>

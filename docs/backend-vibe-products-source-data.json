@@ -1,0 +1,236 @@
+{
+  "channel_type": "vibe-products",
+  "version": "2026-04-22",
+  "categories": [
+    { "name": "效率协作", "icon": "🧩" },
+    { "name": "内容创作", "icon": "✍️" },
+    { "name": "多媒体", "icon": "🎬" },
+    { "name": "学习教育", "icon": "📚" },
+    { "name": "营销增长", "icon": "📣" },
+    { "name": "商业金融", "icon": "💼" },
+    { "name": "健康生活", "icon": "🌿" }
+  ],
+  "allowed_badges": {
+    "reference_badges": [
+      "首页设计",
+      "Onboarding",
+      "定价设计",
+      "结果页",
+      "信息架构",
+      "增长机制",
+      "品牌表达"
+    ],
+    "capability_badges": [
+      "多媒体",
+      "AI Native",
+      "社区",
+      "协作"
+    ],
+    "platform_badges": [
+      "Web",
+      "移动端",
+      "桌面端"
+    ]
+  },
+  "profile_count": 33,
+  "profiles_by_slug": {
+    "linear": {
+      "category_name": "效率协作",
+      "reference_badges": ["首页设计", "信息架构"],
+      "capability_badges": ["协作"],
+      "platform_badges": ["Web"]
+    },
+    "raycast": {
+      "category_name": "效率协作",
+      "reference_badges": ["首页设计", "品牌表达"],
+      "capability_badges": [],
+      "platform_badges": ["桌面端"]
+    },
+    "notion": {
+      "category_name": "效率协作",
+      "reference_badges": ["首页设计", "信息架构"],
+      "capability_badges": ["协作"],
+      "platform_badges": ["Web"]
+    },
+    "granola": {
+      "category_name": "效率协作",
+      "reference_badges": ["首页设计", "Onboarding", "品牌表达"],
+      "capability_badges": ["AI Native"],
+      "platform_badges": ["桌面端"]
+    },
+    "arc": {
+      "category_name": "效率协作",
+      "reference_badges": ["首页设计", "品牌表达"],
+      "capability_badges": [],
+      "platform_badges": ["桌面端"]
+    },
+    "perplexity": {
+      "category_name": "效率协作",
+      "reference_badges": ["Onboarding", "结果页"],
+      "capability_badges": ["AI Native"],
+      "platform_badges": ["Web"]
+    },
+    "claude": {
+      "category_name": "效率协作",
+      "reference_badges": ["Onboarding", "结果页"],
+      "capability_badges": ["AI Native"],
+      "platform_badges": ["Web"]
+    },
+    "chatgpt": {
+      "category_name": "效率协作",
+      "reference_badges": ["Onboarding", "结果页", "信息架构"],
+      "capability_badges": ["AI Native"],
+      "platform_badges": ["Web"]
+    },
+    "cal-com": {
+      "category_name": "效率协作",
+      "reference_badges": ["Onboarding"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "airtable": {
+      "category_name": "效率协作",
+      "reference_badges": ["信息架构"],
+      "capability_badges": ["协作"],
+      "platform_badges": ["Web"]
+    },
+    "tally": {
+      "category_name": "效率协作",
+      "reference_badges": ["Onboarding"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "coda": {
+      "category_name": "效率协作",
+      "reference_badges": ["信息架构"],
+      "capability_badges": ["协作"],
+      "platform_badges": ["Web"]
+    },
+    "savvycal": {
+      "category_name": "效率协作",
+      "reference_badges": ["Onboarding"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "tana": {
+      "category_name": "效率协作",
+      "reference_badges": ["信息架构"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "readwise-reader": {
+      "category_name": "效率协作",
+      "reference_badges": ["信息架构", "结果页"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "attio": {
+      "category_name": "效率协作",
+      "reference_badges": ["信息架构"],
+      "capability_badges": ["协作"],
+      "platform_badges": ["Web"]
+    },
+    "superhuman": {
+      "category_name": "效率协作",
+      "reference_badges": ["首页设计", "定价设计", "品牌表达"],
+      "capability_badges": [],
+      "platform_badges": ["桌面端"]
+    },
+    "discord": {
+      "category_name": "效率协作",
+      "reference_badges": ["增长机制"],
+      "capability_badges": ["社区"],
+      "platform_badges": ["Web", "移动端", "桌面端"]
+    },
+    "obsidian": {
+      "category_name": "效率协作",
+      "reference_badges": ["品牌表达"],
+      "capability_badges": [],
+      "platform_badges": ["桌面端"]
+    },
+    "typefully": {
+      "category_name": "内容创作",
+      "reference_badges": ["增长机制", "信息架构"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "substack": {
+      "category_name": "内容创作",
+      "reference_badges": ["增长机制", "信息架构"],
+      "capability_badges": ["社区"],
+      "platform_badges": ["Web"]
+    },
+    "kit": {
+      "category_name": "内容创作",
+      "reference_badges": ["增长机制", "信息架构", "定价设计"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "gumroad": {
+      "category_name": "内容创作",
+      "reference_badges": ["Onboarding", "增长机制"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "beehiiv": {
+      "category_name": "内容创作",
+      "reference_badges": ["增长机制", "信息架构", "定价设计"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "canva": {
+      "category_name": "内容创作",
+      "reference_badges": ["信息架构", "增长机制"],
+      "capability_badges": ["多媒体", "协作"],
+      "platform_badges": ["Web"]
+    },
+    "descript": {
+      "category_name": "多媒体",
+      "reference_badges": ["首页设计", "定价设计", "结果页"],
+      "capability_badges": ["多媒体", "AI Native"],
+      "platform_badges": ["桌面端"]
+    },
+    "riverside": {
+      "category_name": "多媒体",
+      "reference_badges": ["首页设计", "定价设计"],
+      "capability_badges": ["多媒体"],
+      "platform_badges": ["Web"]
+    },
+    "runwayml": {
+      "category_name": "多媒体",
+      "reference_badges": ["首页设计", "品牌表达"],
+      "capability_badges": ["多媒体", "AI Native"],
+      "platform_badges": ["Web"]
+    },
+    "elevenlabs": {
+      "category_name": "多媒体",
+      "reference_badges": ["首页设计", "品牌表达"],
+      "capability_badges": ["多媒体", "AI Native"],
+      "platform_badges": ["Web"]
+    },
+    "dub": {
+      "category_name": "营销增长",
+      "reference_badges": ["增长机制", "信息架构"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "mercury": {
+      "category_name": "商业金融",
+      "reference_badges": ["首页设计", "Onboarding"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "midday": {
+      "category_name": "商业金融",
+      "reference_badges": ["首页设计", "品牌表达"],
+      "capability_badges": [],
+      "platform_badges": ["Web"]
+    },
+    "oura": {
+      "category_name": "健康生活",
+      "reference_badges": ["首页设计", "品牌表达"],
+      "capability_badges": [],
+      "platform_badges": ["移动端"]
+    }
+  }
+}
