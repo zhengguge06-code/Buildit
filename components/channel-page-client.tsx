@@ -14,6 +14,8 @@ type ChannelPageClientProps = ChannelPageData
 export default function ChannelPageClient({
   channel,
   categories,
+  weeklyNewTools,
+  hotTools,
   toolsByCategory,
 }: ChannelPageClientProps) {
   const router = useRouter()
@@ -37,8 +39,6 @@ export default function ChannelPageClient({
     icon.startsWith("https://") ||
     icon.startsWith("/") ||
     icon.startsWith("data:image/")
-
-  const placeholderText = "这个板块先预留，等我们把精选和热度规则补齐后再开放。"
 
   return (
     <div className="flex">
@@ -80,15 +80,15 @@ export default function ChannelPageClient({
 
         <FadeInUp delay={0.1}>
           <section className="mt-16">
-            <SectionHeading title="本周新增" subtitle="先预留位置，后面再接真实运营规则。" />
-            <EmptyHint>{placeholderText}</EmptyHint>
+            <SectionHeading title="本周新增" subtitle="最近发布并通过审核的条目。" />
+            <ToolGrid tools={weeklyNewTools} emptyText="本周暂时还没有新增条目。" />
           </section>
         </FadeInUp>
 
         <FadeInUp delay={0.12}>
           <section className="mt-16">
-            <SectionHeading title="当前热门" subtitle="先保留版位，等浏览和统计策略稳定后再开放。" />
-            <EmptyHint>{placeholderText}</EmptyHint>
+            <SectionHeading title="当前热门" subtitle="按后台评分和近期浏览综合排序。" />
+            <ToolGrid tools={hotTools} emptyText="当前暂时还没有热门条目。" />
           </section>
         </FadeInUp>
 
@@ -164,6 +164,20 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle?: string 
         {title}
       </h2>
       {subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
+    </div>
+  )
+}
+
+function ToolGrid({ tools, emptyText }: { tools: ChannelPageClientProps["hotTools"]; emptyText: string }) {
+  if (tools.length === 0) {
+    return <EmptyHint>{emptyText}</EmptyHint>
+  }
+
+  return (
+    <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      {tools.map((tool) => (
+        <ToolCard key={tool.id} tool={tool} />
+      ))}
     </div>
   )
 }

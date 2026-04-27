@@ -1,12 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
+import remarkBreaks from "remark-breaks"
 import remarkGfm from "remark-gfm"
 import { ArrowLeft, ExternalLink, Eye, Flame, Sparkles } from "lucide-react"
 import { TrackToolView } from "@/components/track-tool-view"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { getToolDetailBySlug } from "@/lib/ai-tools"
+import { normalizeMarkdownContent } from "@/lib/markdown"
 
 interface ToolPageProps {
   params: Promise<{
@@ -53,6 +55,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const hasPreview = Boolean(tool.previewImageUrl && !isPlaceholderAssetUrl(tool.previewImageUrl))
   const hasLogo = Boolean(tool.logo && !isPlaceholderAssetUrl(tool.logo))
   const logoFallback = tool.name.slice(0, 2).toUpperCase()
+  const renderableFullDescription = normalizeMarkdownContent(tool.fullDescription)
 
   return (
     <div className="container mx-auto px-4 py-10 md:py-14">
@@ -181,7 +184,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         {/* Markdown content */}
         <div className="markdown-content mt-12 border-t border-border/60 pt-10">
           <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkBreaks]}
             components={{
               a: ({ ...props }) => (
                 <a
@@ -193,7 +196,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
               ),
             }}
           >
-            {tool.fullDescription}
+            {renderableFullDescription}
           </ReactMarkdown>
         </div>
       </div>

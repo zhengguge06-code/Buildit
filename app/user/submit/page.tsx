@@ -93,7 +93,11 @@ function normalizeChannelType(value: string | null | undefined): ChannelType {
 }
 
 function normalizeCategoryName(name: string) {
-  return name === "AI IDE" ? "AI 编程环境" : name
+  if (name === "AI IDE" || name === "AI 编程环境") {
+    return "AI 编程智能体"
+  }
+
+  return name
 }
 
 function getChannelLabel(channelType: ChannelType) {

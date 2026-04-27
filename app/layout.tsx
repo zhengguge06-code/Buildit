@@ -26,6 +26,8 @@ export const metadata: Metadata = {
   generator: "Vibe Hub",
 }
 
+export const dynamic = "force-dynamic"
+
 export default function RootLayout({
   children,
 }: Readonly<{

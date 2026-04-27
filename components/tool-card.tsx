@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -14,15 +15,37 @@ interface ToolCardProps {
 const MAX_VISIBLE_BADGES = 4
 
 const spring = { type: "spring", stiffness: 400, damping: 25 } as const
+const PLACEHOLDER_ASSET_SEGMENTS = ["placeholder-logo", "placeholder.jpg", "placeholder.svg"]
 
 function getDisplayBadges(tool: ToolSummary) {
   return [...tool.referenceBadges, ...tool.capabilityBadges, ...tool.platformBadges]
 }
 
+function isPlaceholderAssetUrl(value: string | null | undefined) {
+  if (!value) {
+    return false
+  }
+
+  return PLACEHOLDER_ASSET_SEGMENTS.some((segment) => value.includes(segment))
+}
+
+function getLogoFallback(name: string) {
+  const condensedName = name.replace(/\s+/g, "").trim()
+
+  if (!condensedName) {
+    return "AI"
+  }
+
+  return condensedName.slice(0, 2).toUpperCase()
+}
+
 export default function ToolCard({ tool }: ToolCardProps) {
+  const [hasLogoError, setHasLogoError] = useState(false)
   const badges = getDisplayBadges(tool)
   const visibleBadges = badges.slice(0, MAX_VISIBLE_BADGES)
   const hiddenBadgeCount = Math.max(0, badges.length - visibleBadges.length)
+  const hasLogo = Boolean(tool.logo && !isPlaceholderAssetUrl(tool.logo) && !hasLogoError)
+  const logoFallback = getLogoFallback(tool.name)
 
   return (
     <motion.div
@@ -43,12 +66,19 @@ export default function ToolCard({ tool }: ToolCardProps) {
             transition={spring}
             className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-border/60 bg-background/60"
           >
-            <Image
-              src={tool.logo}
-              alt={tool.name}
-              fill
-              className="object-contain p-1.5"
-            />
+            {hasLogo ? (
+              <Image
+                src={tool.logo}
+                alt={tool.name}
+                fill
+                className="object-contain p-1.5"
+                onError={() => setHasLogoError(true)}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-accent/10 to-background text-xs font-semibold uppercase tracking-[0.14em] text-foreground">
+                {logoFallback}
+              </div>
+            )}
           </motion.div>
 
           <div className="min-w-0 flex-1">
@@ -68,12 +98,12 @@ export default function ToolCard({ tool }: ToolCardProps) {
           </motion.div>
         </div>
 
-        <p className="line-clamp-2 flex-1 text-sm leading-6 text-muted-foreground">
+        <p className="line-clamp-2 min-h-12 max-h-12 overflow-hidden break-words text-sm leading-6 text-muted-foreground">
           {tool.description}
         </p>
 
         {badges.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
+          <div className="mt-auto flex flex-wrap gap-2">
             {visibleBadges.map((badge) => (
               <Badge key={`${tool.slug}-${badge}`} variant="soft" className="text-[11px]">
                 {badge}

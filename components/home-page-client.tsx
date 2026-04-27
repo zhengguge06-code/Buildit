@@ -146,8 +146,8 @@ export default function HomePageClient({
   }
   const handleMouseLeave = () => setMousePos(null)
 
-  const line1 = "做产品，看工具。"
-  const line2 = "看类型，拆产品。"
+  const line1 = "做产品，看工具"
+  const line2 = "找灵感，看产品"
 
   return (
     <div className="relative overflow-hidden">
