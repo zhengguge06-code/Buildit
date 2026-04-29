@@ -24,6 +24,7 @@ import { SubmitFormSkeleton } from "@/components/route-loading-skeletons"
 import type { ChannelType } from "@/lib/ai-tools"
 import { fallbackCategories } from "@/lib/data"
 import { createClient } from "@/lib/supabase/client"
+import { invalidateUserSubmissionsCache } from "@/lib/user-center-cache"
 import { hasSupabaseEnv } from "@/lib/utils"
 
 const formSchema = z.object({
@@ -318,6 +319,7 @@ export default function SubmitPage() {
         description: `${values.name} 已提交到 ${getChannelLabel(values.channelType)}，等待管理员审核。`,
       })
 
+      invalidateUserSubmissionsCache(user.id)
       router.push("/user/submissions")
       router.refresh()
     } catch (error) {
