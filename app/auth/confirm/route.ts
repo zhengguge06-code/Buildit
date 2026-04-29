@@ -1,28 +1,53 @@
-import { type NextRequest } from "next/server"
-import { redirect } from "next/navigation"
+import { type NextRequest, NextResponse } from "next/server"
 import { type EmailOtpType } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/server"
 
+function getSafeNext(request: NextRequest) {
+  const requestedNext = request.nextUrl.searchParams.get("next")
+
+  return requestedNext?.startsWith("/") ? requestedNext : "/user/profile"
+}
+
+function redirectTo(request: NextRequest, pathname: string) {
+  return NextResponse.redirect(new URL(pathname, request.url))
+}
+
+function redirectToError(request: NextRequest, message: string) {
+  return redirectTo(
+    request,
+    `/auth/error?error=${encodeURIComponent(message)}`
+  )
+}
+
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const tokenHash = searchParams.get("token_hash")
-  const type = searchParams.get("type") as EmailOtpType | null
-  const requestedNext = searchParams.get("next")
-  const next = requestedNext?.startsWith("/") ? requestedNext : "/user/profile"
-
-  if (!tokenHash || !type) {
-    redirect("/auth/error?error=缺少必要的确认参数。")
-  }
-
+  const code = request.nextUrl.searchParams.get("code")
+  const tokenHash = request.nextUrl.searchParams.get("token_hash")
+  const type = request.nextUrl.searchParams.get("type") as EmailOtpType | null
+  const next = getSafeNext(request)
   const supabase = await createClient()
-  const { error } = await supabase.auth.verifyOtp({
-    type,
-    token_hash: tokenHash,
-  })
 
-  if (error) {
-    redirect(`/auth/error?error=${encodeURIComponent(error.message)}`)
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+    if (error) {
+      return redirectToError(request, error.message)
+    }
+
+    return redirectTo(request, next)
   }
 
-  redirect(next)
+  if (tokenHash && type) {
+    const { error } = await supabase.auth.verifyOtp({
+      type,
+      token_hash: tokenHash,
+    })
+
+    if (error) {
+      return redirectToError(request, error.message)
+    }
+
+    return redirectTo(request, next)
+  }
+
+  return redirectToError(request, "Invalid or expired confirmation link.")
 }
