@@ -10,11 +10,6 @@ export type VibeProductBadges = {
   platformBadges: string[]
 }
 
-type CategoryRow = {
-  id: string
-  name: string
-}
-
 type VibeProductProfile = VibeProductBadges & {
   categoryId: string
 }
@@ -291,16 +286,16 @@ export function getCanonicalVibeProductCategoryId({
   categoryId?: string | null
   categoryName?: string | null
 }) {
-  if (slug && vibeProductProfilesBySlug[slug]) {
-    return vibeProductProfilesBySlug[slug].categoryId
-  }
-
   if (categoryId && getVibeProductCategoryById(categoryId)) {
     return categoryId
   }
 
   if (categoryName && getVibeProductCategoryByName(categoryName)) {
     return getVibeProductCategoryByName(categoryName)?.id ?? null
+  }
+
+  if (slug && vibeProductProfilesBySlug[slug]) {
+    return vibeProductProfilesBySlug[slug].categoryId
   }
 
   return null
@@ -323,9 +318,9 @@ export function getVibeProductPresentation({
 }) {
   const profile = slug ? vibeProductProfilesBySlug[slug] ?? null : null
   const category =
-    (profile ? getVibeProductCategoryById(profile.categoryId) : null) ??
     getVibeProductCategoryById(categoryId) ??
     getVibeProductCategoryByName(categoryName) ??
+    (profile ? getVibeProductCategoryById(profile.categoryId) : null) ??
     categoryById.get(defaultVibeProductCategoryId)!
 
   return {
@@ -334,23 +329,4 @@ export function getVibeProductPresentation({
     capabilityBadges: uniqueAllowedBadges(profile?.capabilityBadges ?? capabilityBadges, allowedCapabilityBadges),
     platformBadges: uniqueAllowedBadges(profile?.platformBadges ?? platformBadges, allowedPlatformBadges),
   }
-}
-
-export function buildVibeProductCategoryOptions(categoryRows: CategoryRow[]) {
-  const rowsByName = new Map(categoryRows.map((row) => [row.name, row]))
-
-  return canonicalVibeProductCategories
-    .map((category) => {
-      const backingRow = rowsByName.get(category.name)
-
-      if (!backingRow) {
-        return null
-      }
-
-      return {
-        id: backingRow.id,
-        name: category.name,
-      }
-    })
-    .filter((category): category is { id: string; name: string } => category !== null)
 }

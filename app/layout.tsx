@@ -21,9 +21,9 @@ const fraunces = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: "Vibe Hub · 做产品，看工具",
-  description: "围绕 Vibe 工具与 Vibe 产品的整合站入口。做产品时去看 Vibe 工具；看产品类型、找对标和拆参考点时去看 Vibe 产品。",
-  generator: "Vibe Hub",
+  title: "Buildit · 做产品，看工具",
+  description: "从 AI IDE 到部署平台，按构建路径排好了。真实上线的 Vibe Coding 产品，按类型和参考点整理。",
+  generator: "Buildit",
 }
 
 export const dynamic = "force-dynamic"

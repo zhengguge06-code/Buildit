@@ -101,10 +101,10 @@ export default function CategorySidebar({
 
           <div className="mt-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/8 to-accent/8 p-5">
             <h3 className="font-serif text-sm font-semibold text-foreground">
-              发现了好工具/产品？
+              挖到宝了？
             </h3>
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              提交后审核通过即可出现在对应频道中。
+              提交收录，审核通过即刻展示
             </p>
             <Button
               size="sm"

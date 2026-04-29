@@ -107,11 +107,11 @@ insert into public.tool_categories (name, icon, channel_type)
 select seed.name, seed.icon, seed.channel_type
 from (
   values
-    ('灵感原型', '💡', 'vibe-tools'),
-    ('页面生成', '🪄', 'vibe-tools'),
-    ('全栈构建', '🧱', 'vibe-tools'),
+    ('设计与原型', '💡', 'vibe-tools'),
+    ('界面生成', '🪄', 'vibe-tools'),
     ('AI 编程环境', '⌘', 'vibe-tools'),
     ('Agent 编程', '🤖', 'vibe-tools'),
+    ('全栈应用构建', '🧱', 'vibe-tools'),
     ('数据后端', '🗄️', 'vibe-tools'),
     ('自动化流程', '🔄', 'vibe-tools'),
     ('部署发布', '🚀', 'vibe-tools'),

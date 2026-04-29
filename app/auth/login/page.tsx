@@ -28,19 +28,19 @@ export default async function LoginPage() {
               <circle cx="12" cy="12" r="2.5" fill="currentColor" />
             </svg>
           </div>
-          <span className="font-serif text-xl font-semibold tracking-tight">Vibe Hub</span>
+          <span className="font-serif text-xl font-semibold tracking-tight">Buildit</span>
         </Link>
         <div className="relative max-w-md">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">欢迎回来</p>
           <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight tracking-tight text-foreground">
-            登录后<span className="italic text-primary"> 继续探索 </span>
-            那些值得收藏的工具与产品。
+            那些值得用的工具，
+            <span className="italic text-primary"> 都在这里。</span>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-            提交你发现的 Vibe 工具，管理你的收藏列表。
+            登录后可以提交工具、跟踪你发现的产品，也可以参与 Buildit 的共建。
           </p>
         </div>
-        <p className="relative text-xs text-muted-foreground">© Vibe Hub</p>
+        <p className="relative text-xs text-muted-foreground">© Buildit</p>
       </aside>
 
       <div className="flex items-center justify-center p-6 md:p-10">

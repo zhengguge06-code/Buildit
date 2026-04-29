@@ -38,7 +38,7 @@ export function FadeInUp({
 const containerVariants: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.06, delayChildren: 0.05 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.05 },
   },
 }
 

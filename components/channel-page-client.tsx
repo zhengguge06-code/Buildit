@@ -80,21 +80,21 @@ export default function ChannelPageClient({
 
         <FadeInUp delay={0.1}>
           <section className="mt-16">
-            <SectionHeading title="本周新增" subtitle="最近发布并通过审核的条目。" />
+            <SectionHeading title="本周新增" subtitle="近期收录，保持更新。" />
             <ToolGrid tools={weeklyNewTools} emptyText="本周暂时还没有新增条目。" />
           </section>
         </FadeInUp>
 
         <FadeInUp delay={0.12}>
           <section className="mt-16">
-            <SectionHeading title="当前热门" subtitle="按后台评分和近期浏览综合排序。" />
+            <SectionHeading title="当前热门" subtitle="近期访问量高、值得重点看的。" />
             <ToolGrid tools={hotTools} emptyText="当前暂时还没有热门条目。" />
           </section>
         </FadeInUp>
 
         <FadeInUp delay={0.14}>
           <section className="mt-16">
-            <SectionHeading title="分类浏览" subtitle="先按主分类浏览已收录的条目。" />
+            <SectionHeading title="分类浏览" subtitle="按使用场景分类，找你需要的那类。" />
 
             <div className="mt-8 space-y-14">
               {categories.map((category) => {

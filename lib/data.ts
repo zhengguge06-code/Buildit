@@ -2,28 +2,28 @@ const toolDetailTemplate = (name: string, summary: string, highlights: string[])
 
 ${summary}
 
-## 适合谁看
+## 适合什么场景
 
-- 想快速判断这个条目是否值得收藏的人
-- 想了解主要能力、适用场景和上手方式的人
-- 希望在同类产品里快速做选择的人
+- 想快速判断这个工具值不值得花时间试的人
+- 需要了解它能做什么、不能做什么的人
+- 想在同类工具里做选择、少踩坑的人
 
-## 主要亮点
+## 值得关注的点
 
 ${highlights.map((item) => `- ${item}`).join("\n")}
 
-## 使用建议
+## 上手前建议
 
-1. 先访问官网或产品页，确认它当前的功能边界和定价策略。
-2. 再结合你的工作流判断它更适合做原型验证、协作开发，还是内容生产。
-3. 如果准备长期使用，建议顺手确认导出能力、协作方式和稳定性。
+1. 先去官网看一眼定价和当前功能范围，避免踩坑。
+2. 结合你的工作流想清楚——它解决的是哪个卡点。
+3. 如果打算长期用，顺手查下数据导出方式和稳定性记录。
 `
 
 export const fallbackCategories = [
-  { id: "vibe-prototyping", name: "灵感原型", icon: "💡", channelType: "vibe-tools" },
-  { id: "vibe-pages", name: "页面生成", icon: "🪄", channelType: "vibe-tools" },
-  { id: "vibe-fullstack", name: "全栈构建", icon: "🧱", channelType: "vibe-tools" },
+  { id: "vibe-prototyping", name: "设计与原型", icon: "💡", channelType: "vibe-tools" },
+  { id: "vibe-pages", name: "界面生成", icon: "🪄", channelType: "vibe-tools" },
   { id: "vibe-ide", name: "AI 编程智能体", icon: "⌘", channelType: "vibe-tools" },
+  { id: "vibe-fullstack", name: "全栈应用构建", icon: "🧱", channelType: "vibe-tools" },
   { id: "vibe-backend", name: "数据后端", icon: "🗄️", channelType: "vibe-tools" },
   { id: "vibe-automation", name: "自动化流程", icon: "🔄", channelType: "vibe-tools" },
   { id: "vibe-deploy", name: "部署发布", icon: "🚀", channelType: "vibe-tools" },

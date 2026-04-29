@@ -24,7 +24,6 @@ import type { ChannelType } from "@/lib/ai-tools"
 import { fallbackCategories } from "@/lib/data"
 import { createClient } from "@/lib/supabase/client"
 import { hasSupabaseEnv } from "@/lib/utils"
-import { buildVibeProductCategoryOptions } from "@/lib/vibe-product-categories"
 
 const formSchema = z.object({
   channelType: z.enum(["vibe-tools", "vibe-products"], {
@@ -95,6 +94,18 @@ function normalizeChannelType(value: string | null | undefined): ChannelType {
 function normalizeCategoryName(name: string) {
   if (name === "AI IDE" || name === "AI 编程环境") {
     return "AI 编程智能体"
+  }
+
+  if (name === "灵感原型") {
+    return "设计与原型"
+  }
+
+  if (name === "页面生成") {
+    return "界面生成"
+  }
+
+  if (name === "全栈构建") {
+    return "全栈应用构建"
   }
 
   return name
@@ -190,12 +201,13 @@ export default function SubmitPage() {
             name: normalizeCategoryName(category.name),
             channelType: "vibe-tools" as ChannelType,
           }))
-        const vibeProductCategories = buildVibeProductCategoryOptions(
-          rows.filter((category) => normalizeChannelType(category.channel_type) === "vibe-products")
-        ).map((category) => ({
-          ...category,
-          channelType: "vibe-products" as ChannelType,
-        }))
+        const vibeProductCategories = rows
+          .filter((category) => normalizeChannelType(category.channel_type) === "vibe-products")
+          .map((category) => ({
+            id: category.id,
+            name: normalizeCategoryName(category.name),
+            channelType: "vibe-products" as ChannelType,
+          }))
 
         categoryOptions = [...vibeToolCategories, ...vibeProductCategories]
       } else {

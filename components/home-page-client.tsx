@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { motion, useMotionValue, useMotionTemplate, useSpring, useTransform } from "framer-motion"
 import { ArrowRight, Sparkles, Wrench, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FadeInUp, StaggerGrid, StaggerItem } from "@/components/motion/fade"
@@ -18,15 +18,15 @@ interface ChannelInfo {
 const channels: ChannelInfo[] = [
   {
     href: "/vibe-tools",
-    title: "Vibe 工具",
-    description: "做产品时真正会用到的基础设施、平台与工作流工具，按构建流程整理好。",
+    title: "工具箱",
+    description: "实用工具箱，让效率触手可及",
     eyebrow: "构建",
     Icon: Wrench,
   },
   {
     href: "/vibe-products",
-    title: "Vibe 产品",
-    description: "先看有哪些产品类型，再看它们还值得借鉴哪里，适合找对标、找样板和拆参考点。",
+    title: "灵感库",
+    description: "灵感收藏夹，为创意续航充电",
     eyebrow: "灵感",
     Icon: Lightbulb,
   },
@@ -64,7 +64,7 @@ function ScatterChar({ char, mousePos }: { char: string; mousePos: { x: number; 
 
   return (
     <motion.span ref={ref} style={{ x: springX, y: springY, display: "inline-block" }}>
-      {char}
+      {char === " " ? "\u00A0" : char}
     </motion.span>
   )
 }
@@ -73,16 +73,31 @@ function TiltCard({ href, title, description, eyebrow, Icon }: ChannelInfo) {
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
 
-  const springConfig = { stiffness: 300, damping: 30 }
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]), springConfig)
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), springConfig)
+  // 更柔的 spring：惯性感更强，不再抖动
+  const springConfig = { stiffness: 180, damping: 22 }
+  const rotateXRaw = useTransform(y, [-0.5, 0.5], [5, -5])
+  const rotateYRaw = useTransform(x, [-0.5, 0.5], [-5, 5])
+  const rotateX = useSpring(rotateXRaw, springConfig)
+  const rotateY = useSpring(rotateYRaw, springConfig)
+
+  // 用 transform 字符串触发 GPU 硬件加速（替代 shorthand rotateX/Y）
+  const cardTransform = useMotionTemplate`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+
+  // 鼠标跟随的背景光晕
+  const glowBackground = useMotionTemplate`radial-gradient(500px circle at ${mouseX}px ${mouseY}px, rgba(201, 100, 66, 0.08), transparent 70%)`
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return
     const rect = ref.current.getBoundingClientRect()
-    x.set((e.clientX - rect.left) / rect.width - 0.5)
-    y.set((e.clientY - rect.top) / rect.height - 0.5)
+    const relX = e.clientX - rect.left
+    const relY = e.clientY - rect.top
+    x.set(relX / rect.width - 0.5)
+    y.set(relY / rect.height - 0.5)
+    mouseX.set(relX)
+    mouseY.set(relY)
   }
 
   const handleMouseLeave = () => {
@@ -91,39 +106,56 @@ function TiltCard({ href, title, description, eyebrow, Icon }: ChannelInfo) {
   }
 
   return (
-    <div ref={ref} style={{ perspective: "1000px" }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-      <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>
-        <Link
-          href={href}
-          className="group relative block h-full rounded-3xl border border-border/70 bg-card p-8 shadow-warm transition-all duration-300 hover:border-primary/40 hover:shadow-warm-lg md:p-10"
-        >
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="flex flex-col gap-8" style={{ transform: "translateZ(24px)" }}>
-            <div className="flex items-start justify-between">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <Icon className="h-6 w-6" strokeWidth={1.6} />
-              </div>
-              <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
-                {eyebrow}
-              </span>
+    <motion.div
+      ref={ref}
+      style={{ transform: cardTransform, transformStyle: "preserve-3d" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link
+        href={href}
+        className="group relative block h-full overflow-hidden rounded-3xl border border-border/70 bg-card p-8 shadow-warm transition-[border-color,box-shadow,transform] duration-200 hover:border-primary/40 hover:shadow-warm-lg active:scale-[0.985] md:p-10"
+      >
+        {/* 鼠标跟随光晕层 */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ background: glowBackground }}
+        />
+
+        {/* 顶部光边：hover 时点亮 */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+        {/* 内容层，整体浮起 */}
+        <div className="relative flex flex-col gap-8" style={{ transform: "translateZ(24px)" }}>
+          <div className="flex items-start justify-between">
+            {/* 图标：hover 时轻微放大 + 微转 */}
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-[transform,background-color,color] duration-300 group-hover:scale-[1.08] group-hover:-rotate-3 group-hover:bg-primary group-hover:text-primary-foreground">
+              <Icon className="h-6 w-6" strokeWidth={1.6} />
             </div>
-            <div>
-              <h2 className="font-serif text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-                {title}
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">{description}</p>
-            </div>
-            <div className="flex items-center justify-between border-t border-border/50 pt-6 text-sm">
-              <span className="text-muted-foreground">进入频道</span>
-              <span className="inline-flex items-center gap-2 font-medium text-primary">
-                查看内容
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
-              </span>
-            </div>
+            <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+              {eyebrow}
+            </span>
           </div>
-        </Link>
-      </motion.div>
-    </div>
+
+          <div>
+            <h2 className="font-serif text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              {title}
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">{description}</p>
+          </div>
+
+          <div className="flex items-center justify-between border-t border-border/50 pt-6 text-sm">
+            <span className="text-muted-foreground">进入频道</span>
+            {/* 箭头：平移 + 淡入双重过渡 */}
+            <span className="inline-flex items-center gap-2 font-medium text-primary">
+              查看内容
+              <ArrowRight className="h-4 w-4 opacity-50 transition-[transform,opacity] duration-300 group-hover:translate-x-1.5 group-hover:opacity-100" />
+            </span>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   )
 }
 
@@ -146,8 +178,7 @@ export default function HomePageClient({
   }
   const handleMouseLeave = () => setMousePos(null)
 
-  const line1 = "做产品，看工具"
-  const line2 = "找灵感，看产品"
+  const heroTitle = "Just Buildit"
 
   return (
     <div className="relative overflow-hidden">
@@ -161,7 +192,7 @@ export default function HomePageClient({
           <FadeInUp>
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-primary">
               <Sparkles className="h-3.5 w-3.5" />
-              Vibe Hub
+              Buildit
             </span>
           </FadeInUp>
 
@@ -173,22 +204,16 @@ export default function HomePageClient({
               className="mt-8 font-serif text-5xl font-medium leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl"
             >
               <span className="block">
-                {line1.split("").map((char, i) => (
-                  <ScatterChar key={`l1-${i}`} char={char} mousePos={mousePos} />
+                {heroTitle.split("").map((char, i) => (
+                  <ScatterChar key={`hero-${i}`} char={char} mousePos={mousePos} />
                 ))}
               </span>
-              <span className="hidden md:block">
-                {line2.split("").map((char, i) => (
-                  <ScatterChar key={`l2-${i}`} char={char} mousePos={mousePos} />
-                ))}
-              </span>
-              <span className="md:hidden">{line2}</span>
             </h1>
           </FadeInUp>
 
           <FadeInUp delay={0.2}>
             <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              首页只负责把你带到正确的频道里。做东西时去看 Vibe 工具；找对标、看产品类型和拆参考点时去看 Vibe 产品。
+              做产品，看工具；找灵感，看产品
             </p>
           </FadeInUp>
 
@@ -196,12 +221,12 @@ export default function HomePageClient({
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg">
                 <Link href="/vibe-tools" className="group">
-                  进入 Vibe 工具
+                  进入工具箱
                   <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/vibe-products">进入 Vibe 产品</Link>
+                <Link href="/vibe-products">进入灵感库</Link>
               </Button>
             </div>
           </FadeInUp>
@@ -219,9 +244,9 @@ export default function HomePageClient({
           <FadeInUp delay={0.2}>
             <div className="mt-20 grid grid-cols-3 gap-px overflow-hidden rounded-3xl border border-border/70 bg-border/70">
               {[
-                { label: "Vibe 工具", value: toolsCount ?? 0 },
-                { label: "Vibe 产品", value: productsCount ?? 0 },
-                { label: "覆盖分类", value: categoriesCount ?? 0 },
+                { label: "工具", value: toolsCount ?? 0 },
+                { label: "产品", value: productsCount ?? 0 },
+                { label: "分类", value: categoriesCount ?? 0 },
               ].map((stat) => (
                 <div key={stat.label} className="bg-card px-6 py-8 text-center md:px-10 md:py-10">
                   <div className="font-serif text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
@@ -241,10 +266,10 @@ export default function HomePageClient({
             <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
               <div className="max-w-xl">
                 <h3 className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-                  有想推荐的工具或产品？
+                  发现了好东西想推荐？
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
-                  欢迎一起共建 Vibe Hub。提交后会经过简单审核，通过后会出现在对应频道里。
+                  发现了值得收录的工具或产品，欢迎提交！
                 </p>
               </div>
               <Button asChild size="lg">

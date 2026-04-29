@@ -51,7 +51,7 @@ export default async function Header() {
               </svg>
             </div>
             <span className="font-serif text-xl font-semibold tracking-tight text-foreground">
-              Vibe Hub
+              Buildit
             </span>
           </Link>
 
@@ -60,14 +60,14 @@ export default async function Header() {
               href="/vibe-tools"
               className="group relative rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              Vibe 工具
+              工具箱
               <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
             <Link
               href="/vibe-products"
               className="group relative rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              Vibe 产品
+              灵感库
               <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           </nav>

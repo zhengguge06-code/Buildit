@@ -28,19 +28,19 @@ export default async function SignUpPage() {
               <circle cx="12" cy="12" r="2.5" fill="currentColor" />
             </svg>
           </div>
-          <span className="font-serif text-xl font-semibold tracking-tight">Vibe Hub</span>
+          <span className="font-serif text-xl font-semibold tracking-tight">Buildit</span>
         </Link>
         <div className="relative max-w-md">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">加入 Vibe Hub</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">加入 Buildit</p>
           <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight tracking-tight text-foreground">
-            注册账户<span className="italic text-primary"> 提交你的 </span>
-            工具、收藏好产品。
+            把你发现的好东西，
+            <span className="italic text-primary"> 分享出来。</span>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-            一份邮箱即可，几秒钟完成。
+            注册后可以提交工具或产品，收录了就会出现在对应的频道里给大家看到。
           </p>
         </div>
-        <p className="relative text-xs text-muted-foreground">© Vibe Hub</p>
+        <p className="relative text-xs text-muted-foreground">© Buildit</p>
       </aside>
 
       <div className="flex items-center justify-center p-6 md:p-10">
