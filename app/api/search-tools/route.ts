@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getSearchableTools } from "@/lib/ai-tools"
 
-export const revalidate = 300
+export const revalidate = 60
 
 export async function GET() {
   const tools = await getSearchableTools()
@@ -10,7 +10,7 @@ export async function GET() {
     { tools },
     {
       headers: {
-        "Cache-Control": "public, max-age=300, stale-while-revalidate=600",
+        "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
       },
     }
   )

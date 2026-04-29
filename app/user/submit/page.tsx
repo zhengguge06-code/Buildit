@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
+import { SubmitFormSkeleton } from "@/components/route-loading-skeletons"
 import type { ChannelType } from "@/lib/ai-tools"
 import { fallbackCategories } from "@/lib/data"
 import { createClient } from "@/lib/supabase/client"
@@ -331,7 +332,7 @@ export default function SubmitPage() {
   }
 
   if (isCheckingAuth) {
-    return <div className="max-w-3xl py-8 text-sm text-muted-foreground">正在检查登录状态...</div>
+    return <SubmitFormSkeleton />
   }
 
   if (!hasSupabaseEnv) {
