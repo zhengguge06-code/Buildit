@@ -518,6 +518,7 @@ async function getViewCountMap(supabase: SupabaseServerClient, toolIds: string[]
   const { data, error } = await supabase
     .from("tool_views")
     .select("tool_id, viewed_at")
+    .in("tool_id", toolIds)
     .gte("viewed_at", getRecentThresholdDate().toISOString())
 
   if (error || !data) {

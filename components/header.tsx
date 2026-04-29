@@ -1,32 +1,9 @@
 import Link from "next/link"
 import { HeaderAuthControls } from "@/components/header-auth-controls"
 import { HeaderSearch } from "@/components/header-search"
-import { getSearchableTools } from "@/lib/ai-tools"
-import { createClient } from "@/lib/supabase/server"
 import { hasSupabaseEnv } from "@/lib/utils"
 
-export default async function Header() {
-  let userEmail: string | null = null
-  let userName: string | null = null
-
-  const searchableTools = await getSearchableTools()
-
-  if (hasSupabaseEnv) {
-    const supabase = await createClient()
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    userEmail = user?.email ?? null
-    userName =
-      (typeof user?.user_metadata?.full_name === "string"
-        ? user.user_metadata.full_name
-        : typeof user?.user_metadata?.name === "string"
-          ? user.user_metadata.name
-          : null) ??
-      (user?.email ? user.email.split("@")[0] : null)
-  }
-
+export default function Header() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/50 bg-background/75 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
@@ -75,12 +52,12 @@ export default async function Header() {
 
         <div className="flex items-center gap-3">
           <div className="hidden md:block">
-            <HeaderSearch tools={searchableTools} />
+            <HeaderSearch />
           </div>
           <HeaderAuthControls
             enabled={hasSupabaseEnv}
-            initialUserEmail={userEmail}
-            initialUserName={userName}
+            initialUserEmail={null}
+            initialUserName={null}
           />
         </div>
       </div>

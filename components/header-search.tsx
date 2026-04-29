@@ -9,16 +9,17 @@ import { Input } from "@/components/ui/input"
 import type { SearchableTool } from "@/lib/ai-tools"
 
 type HeaderSearchProps = {
-  tools: SearchableTool[]
+  tools?: SearchableTool[]
 }
 
 function normalizeKeyword(value: string) {
   return value.trim().toLowerCase()
 }
 
-export function HeaderSearch({ tools }: HeaderSearchProps) {
+export function HeaderSearch({ tools: initialTools = [] }: HeaderSearchProps) {
   const router = useRouter()
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const [tools, setTools] = useState(initialTools)
   const [keyword, setKeyword] = useState("")
   const [isOpen, setIsOpen] = useState(false)
 
@@ -32,6 +33,37 @@ export function HeaderSearch({ tools }: HeaderSearchProps) {
             return haystack.includes(normalizedKeyword)
           })
           .slice(0, 6)
+
+  useEffect(() => {
+    if (initialTools.length > 0) {
+      return
+    }
+
+    let isMounted = true
+
+    async function loadSearchableTools() {
+      try {
+        const response = await fetch("/api/search-tools")
+        const payload = (await response.json().catch(() => null)) as {
+          tools?: SearchableTool[]
+        } | null
+
+        if (isMounted && response.ok) {
+          setTools(payload?.tools ?? [])
+        }
+      } catch {
+        if (isMounted) {
+          setTools([])
+        }
+      }
+    }
+
+    void loadSearchableTools()
+
+    return () => {
+      isMounted = false
+    }
+  }, [initialTools.length])
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {

@@ -26,8 +26,6 @@ export const metadata: Metadata = {
   generator: "Buildit",
 }
 
-export const dynamic = "force-dynamic"
-
 export default function RootLayout({
   children,
 }: Readonly<{
