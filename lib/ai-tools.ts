@@ -1,8 +1,9 @@
 import { fallbackCategories, fallbackTools, getFallbackToolBySlug } from "@/lib/data"
-import { createClient } from "@/lib/supabase/server"
 import { curatedCategorySortOrders, curatedExtraTools, curatedToolOverrides } from "@/lib/tool-overrides"
 import { hasSupabaseEnv } from "@/lib/utils"
 import { getVibeProductPresentation } from "@/lib/vibe-product-categories"
+import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js"
+import { unstable_cache } from "next/cache"
 
 export type ChannelType = "vibe-tools" | "vibe-products"
 
@@ -69,7 +70,7 @@ export type ChannelPageData = {
   toolsByCategory: Record<string, ToolSummary[]>
 }
 
-type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
+type SupabasePublicClient = SupabaseClient
 
 type RawCategoryRow = {
   id: string
@@ -508,7 +509,7 @@ function buildEmptyChannelPageData(channelType: ChannelType): ChannelPageData {
   }
 }
 
-async function getViewCountMap(supabase: SupabaseServerClient, toolIds: string[]) {
+async function getViewCountMap(supabase: SupabasePublicClient, toolIds: string[]) {
   const viewCounts = new Map<string, number>()
 
   if (toolIds.length === 0) {
@@ -537,7 +538,7 @@ async function getViewCountMap(supabase: SupabaseServerClient, toolIds: string[]
 }
 
 async function fetchNewSchemaChannelPageData(
-  supabase: SupabaseServerClient,
+  supabase: SupabasePublicClient,
   channelType: ChannelType
 ): Promise<ChannelPageData | null> {
   const { data: categoryData, error: categoryError } = await supabase
@@ -625,7 +626,7 @@ async function fetchNewSchemaChannelPageData(
 }
 
 async function fetchLegacyChannelPageData(
-  supabase: SupabaseServerClient,
+  supabase: SupabasePublicClient,
   channelType: ChannelType
 ): Promise<ChannelPageData | null> {
   if (channelType !== "vibe-tools") {
@@ -689,7 +690,7 @@ async function fetchLegacyChannelPageData(
   return buildChannelPageData("vibe-tools", categories, tools)
 }
 
-async function fetchNewSchemaToolDetail(supabase: SupabaseServerClient, slug: string): Promise<ToolDetail | null> {
+async function fetchNewSchemaToolDetail(supabase: SupabasePublicClient, slug: string): Promise<ToolDetail | null> {
   const { data, error } = await supabase
     .from("tools")
     .select(
@@ -775,7 +776,7 @@ async function fetchNewSchemaToolDetail(supabase: SupabaseServerClient, slug: st
   })
 }
 
-async function fetchLegacyToolDetail(supabase: SupabaseServerClient, slug: string): Promise<ToolDetail | null> {
+async function fetchLegacyToolDetail(supabase: SupabasePublicClient, slug: string): Promise<ToolDetail | null> {
   const { data, error } = await supabase
     .from("ai_tools")
     .select(
@@ -887,7 +888,7 @@ function buildFallbackToolDetail(slug: string): ToolDetail | null {
   })
 }
 
-async function fetchAllSearchableToolsFromNewSchema(supabase: SupabaseServerClient): Promise<SearchableTool[] | null> {
+async function fetchAllSearchableToolsFromNewSchema(supabase: SupabasePublicClient): Promise<SearchableTool[] | null> {
   const { data, error } = await supabase
     .from("tools")
     .select(
@@ -947,7 +948,7 @@ async function fetchAllSearchableToolsFromNewSchema(supabase: SupabaseServerClie
   )
 }
 
-async function fetchAllSearchableToolsFromLegacy(supabase: SupabaseServerClient): Promise<SearchableTool[] | null> {
+async function fetchAllSearchableToolsFromLegacy(supabase: SupabasePublicClient): Promise<SearchableTool[] | null> {
   const { data, error } = await supabase
     .from("ai_tools")
     .select("id, name, slug, description, logo_url, category_id")
@@ -1012,12 +1013,25 @@ function buildFallbackSearchableTools() {
   )
 }
 
-export async function getChannelPageData(channelType: ChannelType): Promise<ChannelPageData> {
+function createPublicDataClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  )
+}
+
+async function loadChannelPageData(channelType: ChannelType): Promise<ChannelPageData> {
   if (!hasSupabaseEnv) {
     return buildEmptyChannelPageData(channelType)
   }
 
-  const supabase = await createClient()
+  const supabase = createPublicDataClient()
   const nextData = await fetchNewSchemaChannelPageData(supabase, channelType)
 
   if (nextData) {
@@ -1033,12 +1047,22 @@ export async function getChannelPageData(channelType: ChannelType): Promise<Chan
   return buildEmptyChannelPageData(channelType)
 }
 
-export async function getSearchableTools(): Promise<SearchableTool[]> {
+const getCachedChannelPageData = unstable_cache(
+  loadChannelPageData,
+  ["channel-page-data"],
+  { revalidate: 60 }
+)
+
+export async function getChannelPageData(channelType: ChannelType): Promise<ChannelPageData> {
+  return getCachedChannelPageData(channelType)
+}
+
+async function loadSearchableTools(): Promise<SearchableTool[]> {
   if (!hasSupabaseEnv) {
     return []
   }
 
-  const supabase = await createClient()
+  const supabase = createPublicDataClient()
   const nextTools = await fetchAllSearchableToolsFromNewSchema(supabase)
 
   if (nextTools && nextTools.length > 0) {
@@ -1054,14 +1078,24 @@ export async function getSearchableTools(): Promise<SearchableTool[]> {
   return []
 }
 
-export async function getToolDetailBySlug(slug: string): Promise<ToolDetail | null> {
+const getCachedSearchableTools = unstable_cache(
+  loadSearchableTools,
+  ["searchable-tools"],
+  { revalidate: 300 }
+)
+
+export async function getSearchableTools(): Promise<SearchableTool[]> {
+  return getCachedSearchableTools()
+}
+
+async function loadToolDetailBySlug(slug: string): Promise<ToolDetail | null> {
   const normalizedSlug = normalizeSlugParam(slug)
 
   if (!hasSupabaseEnv) {
     return null
   }
 
-  const supabase = await createClient()
+  const supabase = createPublicDataClient()
   const nextTool = await fetchNewSchemaToolDetail(supabase, normalizedSlug)
 
   if (nextTool) {
@@ -1075,4 +1109,14 @@ export async function getToolDetailBySlug(slug: string): Promise<ToolDetail | nu
   }
 
   return null
+}
+
+const getCachedToolDetailBySlug = unstable_cache(
+  loadToolDetailBySlug,
+  ["tool-detail"],
+  { revalidate: 60 }
+)
+
+export async function getToolDetailBySlug(slug: string): Promise<ToolDetail | null> {
+  return getCachedToolDetailBySlug(slug)
 }

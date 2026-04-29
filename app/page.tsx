@@ -1,6 +1,8 @@
 import HomePageClient from "@/components/home-page-client"
 import { getChannelPageData } from "@/lib/ai-tools"
 
+export const revalidate = 60
+
 export default async function HomePage() {
   const [toolsData, productsData] = await Promise.all([
     getChannelPageData("vibe-tools"),

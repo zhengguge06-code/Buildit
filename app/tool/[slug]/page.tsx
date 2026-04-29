@@ -7,7 +7,7 @@ import { ArrowLeft, ExternalLink, Eye, Flame, Sparkles } from "lucide-react"
 import { TrackToolView } from "@/components/track-tool-view"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getToolDetailBySlug } from "@/lib/ai-tools"
+import { getSearchableTools, getToolDetailBySlug } from "@/lib/ai-tools"
 import { normalizeMarkdownContent } from "@/lib/markdown"
 
 interface ToolPageProps {
@@ -17,6 +17,16 @@ interface ToolPageProps {
 }
 
 const PLACEHOLDER_ASSET_SEGMENTS = ["placeholder-logo", "placeholder.jpg", "placeholder.svg"]
+
+export const revalidate = 60
+
+export async function generateStaticParams() {
+  const tools = await getSearchableTools()
+
+  return tools.map((tool) => ({
+    slug: tool.slug,
+  }))
+}
 
 function isPlaceholderAssetUrl(value: string | null | undefined) {
   if (!value) {
