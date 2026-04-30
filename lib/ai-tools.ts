@@ -1,6 +1,5 @@
 import { fallbackCategories, fallbackTools, getFallbackToolBySlug } from "@/lib/data"
 import { curatedCategorySortOrders, curatedExtraTools, curatedToolOverrides } from "@/lib/tool-overrides"
-import { hasSupabaseEnv } from "@/lib/utils"
 import { getVibeProductPresentation } from "@/lib/vibe-product-categories"
 import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js"
 import { unstable_cache } from "next/cache"
@@ -72,6 +71,11 @@ export type ChannelPageData = {
 
 type SupabasePublicClient = SupabaseClient
 
+type SupabasePublicConfig = {
+  url: string
+  publishableKey: string
+}
+
 type RawCategoryRow = {
   id: string
   name: string
@@ -115,6 +119,14 @@ type RawLegacyToolRow = {
 
 const FEATURED_LIMIT = 6
 const RECENT_DAYS = 7
+
+const SUPABASE_URL_ENV_KEYS = ["SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL"] as const
+const SUPABASE_PUBLISHABLE_KEY_ENV_KEYS = [
+  "SUPABASE_PUBLISHABLE_KEY",
+  "SUPABASE_ANON_KEY",
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+] as const
 
 const vibeToolCategoryOrder = [
   "设计与原型",
@@ -165,6 +177,29 @@ function getChannelConfig(channelType: ChannelType) {
 
 function getChannelLabel(channelType: ChannelType) {
   return getChannelConfig(channelType).navLabel
+}
+
+function readServerEnv(keys: readonly string[]) {
+  for (const key of keys) {
+    const value = process.env[key]?.trim()
+
+    if (value) {
+      return value
+    }
+  }
+
+  return null
+}
+
+function getSupabasePublicConfig(): SupabasePublicConfig | null {
+  const url = readServerEnv(SUPABASE_URL_ENV_KEYS)
+  const publishableKey = readServerEnv(SUPABASE_PUBLISHABLE_KEY_ENV_KEYS)
+
+  if (!url || !publishableKey) {
+    return null
+  }
+
+  return { url, publishableKey }
 }
 
 function getRecentThresholdDate() {
@@ -507,6 +542,37 @@ function buildEmptyChannelPageData(channelType: ChannelType): ChannelPageData {
     hotTools: [],
     toolsByCategory: {},
   }
+}
+
+function getChannelToolCount(data: ChannelPageData) {
+  return Object.values(data.toolsByCategory).reduce((sum, tools) => sum + tools.length, 0)
+}
+
+function buildFallbackChannelPageData(channelType: ChannelType): ChannelPageData {
+  const categories = fallbackCategories.map(mapFallbackCategory)
+  const categoryMap = buildCategoryMap(categories)
+  const tools = fallbackTools
+    .filter((tool) => normalizeChannelType(tool.channelType) === channelType)
+    .map((tool) =>
+      mapToolRecord(
+        {
+          id: tool.id,
+          name: tool.name,
+          slug: tool.slug,
+          description: tool.description,
+          logo: tool.logo,
+          categoryId: tool.categoryId,
+          channelType: normalizeChannelType(tool.channelType),
+          publishedAt: tool.publishedAt,
+          weeklyViews: tool.weeklyViews,
+          isEditorial: true,
+          ...getFallbackToolBadges(tool),
+        },
+        categoryMap
+      )
+    )
+
+  return buildChannelPageData(channelType, categories, tools)
 }
 
 async function getViewCountMap(supabase: SupabasePublicClient, toolIds: string[]) {
@@ -1013,10 +1079,31 @@ function buildFallbackSearchableTools() {
   )
 }
 
-function createPublicDataClient() {
+function fillMissingSearchChannelsWithFallback(tools: SearchableTool[]) {
+  const fallbackTools = buildFallbackSearchableTools()
+  const hasVibeTools = tools.some((tool) => tool.channelType === "vibe-tools")
+  const hasVibeProducts = tools.some((tool) => tool.channelType === "vibe-products")
+  const fallbackChannels = new Set<ChannelType>()
+
+  if (!hasVibeTools) {
+    fallbackChannels.add("vibe-tools")
+  }
+
+  if (!hasVibeProducts) {
+    fallbackChannels.add("vibe-products")
+  }
+
+  if (fallbackChannels.size === 0) {
+    return dedupeBySlug(tools)
+  }
+
+  return dedupeBySlug([...tools, ...fallbackTools.filter((tool) => fallbackChannels.has(tool.channelType))])
+}
+
+function createPublicDataClient(config: SupabasePublicConfig) {
   return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    config.url,
+    config.publishableKey,
     {
       auth: {
         autoRefreshToken: false,
@@ -1027,24 +1114,26 @@ function createPublicDataClient() {
 }
 
 async function loadChannelPageData(channelType: ChannelType): Promise<ChannelPageData> {
-  if (!hasSupabaseEnv) {
-    return buildEmptyChannelPageData(channelType)
+  const supabaseConfig = getSupabasePublicConfig()
+
+  if (!supabaseConfig) {
+    return buildFallbackChannelPageData(channelType)
   }
 
-  const supabase = createPublicDataClient()
+  const supabase = createPublicDataClient(supabaseConfig)
   const nextData = await fetchNewSchemaChannelPageData(supabase, channelType)
 
-  if (nextData) {
+  if (nextData && getChannelToolCount(nextData) > 0) {
     return nextData
   }
 
   const legacyData = await fetchLegacyChannelPageData(supabase, channelType)
 
-  if (legacyData) {
+  if (legacyData && getChannelToolCount(legacyData) > 0) {
     return legacyData
   }
 
-  return buildEmptyChannelPageData(channelType)
+  return buildFallbackChannelPageData(channelType)
 }
 
 const getCachedChannelPageData = unstable_cache(
@@ -1058,24 +1147,26 @@ export async function getChannelPageData(channelType: ChannelType): Promise<Chan
 }
 
 async function loadSearchableTools(): Promise<SearchableTool[]> {
-  if (!hasSupabaseEnv) {
-    return []
+  const supabaseConfig = getSupabasePublicConfig()
+
+  if (!supabaseConfig) {
+    return buildFallbackSearchableTools()
   }
 
-  const supabase = createPublicDataClient()
+  const supabase = createPublicDataClient(supabaseConfig)
   const nextTools = await fetchAllSearchableToolsFromNewSchema(supabase)
 
   if (nextTools && nextTools.length > 0) {
-    return dedupeBySlug(nextTools)
+    return fillMissingSearchChannelsWithFallback(nextTools)
   }
 
   const legacyTools = await fetchAllSearchableToolsFromLegacy(supabase)
 
   if (legacyTools && legacyTools.length > 0) {
-    return dedupeBySlug(legacyTools)
+    return fillMissingSearchChannelsWithFallback(legacyTools)
   }
 
-  return []
+  return buildFallbackSearchableTools()
 }
 
 const getCachedSearchableTools = unstable_cache(
@@ -1090,12 +1181,13 @@ export async function getSearchableTools(): Promise<SearchableTool[]> {
 
 async function loadToolDetailBySlug(slug: string): Promise<ToolDetail | null> {
   const normalizedSlug = normalizeSlugParam(slug)
+  const supabaseConfig = getSupabasePublicConfig()
 
-  if (!hasSupabaseEnv) {
-    return null
+  if (!supabaseConfig) {
+    return buildFallbackToolDetail(normalizedSlug)
   }
 
-  const supabase = createPublicDataClient()
+  const supabase = createPublicDataClient(supabaseConfig)
   const nextTool = await fetchNewSchemaToolDetail(supabase, normalizedSlug)
 
   if (nextTool) {
@@ -1108,7 +1200,7 @@ async function loadToolDetailBySlug(slug: string): Promise<ToolDetail | null> {
     return legacyTool
   }
 
-  return null
+  return buildFallbackToolDetail(normalizedSlug)
 }
 
 const getCachedToolDetailBySlug = unstable_cache(

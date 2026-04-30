@@ -156,7 +156,7 @@ create table if not exists public.ai_tools (
   category_id uuid not null references public.tool_categories(id),
   created_at timestamp not null default now(),
   updated_at timestamp not null default now(),
-  user_id uuid references auth.users(id),
+  user_id uuid references auth.users(id) on delete set null,
   is_approved boolean not null default true
 );
 
@@ -169,7 +169,7 @@ create table if not exists public.tool_submissions (
   logo_url varchar(255),
   preview_image_url varchar(255),
   category_id uuid not null references public.tool_categories(id),
-  user_id uuid not null references auth.users(id),
+  user_id uuid not null references auth.users(id) on delete cascade,
   status varchar(20) not null default 'pending',
   admin_comments text,
   created_at timestamp not null default now(),

@@ -18,7 +18,7 @@ create table if not exists public.tools (
   published_at timestamp,
   created_at timestamp not null default now(),
   updated_at timestamp not null default now(),
-  user_id uuid references auth.users(id)
+  user_id uuid references auth.users(id) on delete set null
 );
 
 alter table public.tool_categories
@@ -67,6 +67,15 @@ alter table public.tool_submissions
 
 alter table public.tool_submissions
   add column if not exists tool_id uuid references public.tools(id);
+
+alter table public.tool_submissions
+  drop constraint if exists tool_submissions_user_id_fkey;
+
+alter table public.tool_submissions
+  add constraint tool_submissions_user_id_fkey
+  foreign key (user_id)
+  references auth.users(id)
+  on delete cascade;
 
 alter table public.tools
   add column if not exists reference_badges text[] not null default '{}';
