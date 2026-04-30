@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createClient } from "@/lib/supabase/client"
-import { cn, hasSupabaseEnv } from "@/lib/utils"
+import { cn, getPublicSiteOrigin, hasSupabaseEnv } from "@/lib/utils"
 
 export function SignUpForm({
   className,
@@ -39,7 +39,7 @@ export function SignUpForm({
     }
 
     const supabase = createClient()
-    const redirectUrl = new URL("/auth/confirm", window.location.origin)
+    const redirectUrl = new URL("/auth/confirm", getPublicSiteOrigin())
     redirectUrl.searchParams.set("next", next)
 
     setIsLoading(true)

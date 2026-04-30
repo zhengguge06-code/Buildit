@@ -49,7 +49,15 @@ end $$;
 
 do $$
 begin
-  if to_regclass('public.admin_users') is not null then
+  if to_regclass('public.admin_users') is not null
+    and exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'admin_users'
+        and column_name = 'user_id'
+    )
+  then
     alter table public.admin_users
       drop constraint if exists admin_users_user_id_fkey;
 
@@ -58,7 +66,17 @@ begin
       foreign key (user_id)
       references auth.users(id)
       on delete cascade;
+  end if;
 
+  if to_regclass('public.admin_users') is not null
+    and exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'admin_users'
+        and column_name = 'granted_by'
+    )
+  then
     alter table public.admin_users
       drop constraint if exists admin_users_granted_by_fkey;
 
