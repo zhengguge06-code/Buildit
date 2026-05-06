@@ -49,19 +49,19 @@ export default function ChannelPageClient({
         onSubmitClick={handleSubmitClick}
       />
 
-      <div className="min-h-[calc(100vh-4rem)] flex-1 px-4 py-10 md:px-8 lg:px-12 lg:py-14">
+      <div className="min-h-[calc(100vh-4rem)] flex-1 px-4 py-6 md:px-8 md:py-7 lg:px-10 lg:py-8">
         <FadeInUp>
-          <section className="relative mx-auto max-w-4xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
+          <section className="relative max-w-4xl">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-primary">
               {channel.eyebrow}
             </span>
-            <h1 className="mt-5 font-serif text-4xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
+            <h1 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               {channel.title}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground md:text-base">
               {channel.description}
             </p>
-            <div className="mt-7 h-px w-24 bg-gradient-to-r from-primary/60 to-transparent" />
+            <div className="mt-4 h-px w-20 bg-gradient-to-r from-primary/60 to-transparent" />
           </section>
         </FadeInUp>
 
@@ -79,24 +79,24 @@ export default function ChannelPageClient({
         </div>
 
         <FadeInUp delay={0.1}>
-          <section className="mt-16">
-            <SectionHeading title="本周新增" subtitle="近期收录，保持更新。" />
+          <section className="mt-8 md:mt-10">
+            <SectionHeading title="本周新增" />
             <ToolGrid tools={weeklyNewTools} emptyText="本周暂时还没有新增条目。" />
           </section>
         </FadeInUp>
 
         <FadeInUp delay={0.12}>
-          <section className="mt-16">
-            <SectionHeading title="当前热门" subtitle="近期访问量高、值得重点看的。" />
+          <section className="mt-10 md:mt-12">
+            <SectionHeading title="当前热门" />
             <ToolGrid tools={hotTools} emptyText="当前暂时还没有热门条目。" />
           </section>
         </FadeInUp>
 
         <FadeInUp delay={0.14}>
-          <section className="mt-16">
-            <SectionHeading title="分类浏览" subtitle="按使用场景分类，找你需要的那类。" />
+          <section className="mt-10 md:mt-12">
+            <SectionHeading title="分类浏览" />
 
-            <div className="mt-8 space-y-14">
+            <div className="mt-6 space-y-14">
               {categories.map((category) => {
                 const categoryTools = toolsByCategory[category.id] ?? []
 
@@ -124,7 +124,7 @@ export default function ChannelPageClient({
                             <span>{category.icon}</span>
                           )
                         ) : (
-                          "•"
+                          "-"
                         )}
                       </span>
                       <div>
@@ -157,13 +157,12 @@ export default function ChannelPageClient({
   )
 }
 
-function SectionHeading({ title, subtitle }: { title: string; subtitle?: string }) {
+function SectionHeading({ title }: { title: string }) {
   return (
     <div>
       <h2 className="font-serif text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
         {title}
       </h2>
-      {subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
     </div>
   )
 }
@@ -174,7 +173,7 @@ function ToolGrid({ tools, emptyText }: { tools: ChannelPageClientProps["hotTool
   }
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {tools.map((tool) => (
         <ToolCard key={tool.id} tool={tool} />
       ))}
@@ -184,8 +183,9 @@ function ToolGrid({ tools, emptyText }: { tools: ChannelPageClientProps["hotTool
 
 function EmptyHint({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-7 rounded-2xl border border-dashed border-border bg-card/50 px-5 py-8 text-center text-sm text-muted-foreground">
+    <p className="mt-6 rounded-2xl border border-dashed border-border bg-card/50 px-5 py-8 text-center text-sm text-muted-foreground">
       {children}
     </p>
   )
 }
+
