@@ -112,6 +112,51 @@ body {
   .markdown-content td {
     @apply border-t border-border/60 px-3 py-2 align-top;
   }
+
+  .markdown-content-compact {
+    @apply space-y-3.5 text-sm leading-6;
+  }
+
+  .markdown-content-compact h1 {
+    @apply mt-8 text-2xl;
+  }
+
+  .markdown-content-compact h2 {
+    @apply mt-6 text-xl;
+  }
+
+  .markdown-content-compact h3 {
+    @apply mt-5 text-lg;
+  }
+
+  .markdown-content-compact ul {
+    @apply space-y-1.5 pl-5;
+  }
+
+  .markdown-content-compact ol {
+    @apply space-y-1.5 pl-5;
+  }
+
+  .markdown-content-compact li {
+    @apply leading-6;
+  }
+
+  .markdown-content-compact blockquote {
+    @apply py-1.5 pl-3;
+  }
+
+  .markdown-content-compact pre {
+    @apply rounded-lg p-3;
+  }
+
+  .markdown-content-compact table {
+    @apply rounded-lg text-xs;
+  }
+
+  .markdown-content-compact th,
+  .markdown-content-compact td {
+    @apply px-2.5 py-1.5;
+  }
 }
 
 @layer base {
