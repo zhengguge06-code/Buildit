@@ -162,7 +162,7 @@ async function loadGitHubTrending(): Promise<GitHubTrendingResult> {
   const repositories = parseTrendingRepositories(html)
 
   if (repositories.length === 0) {
-    return buildResult("empty", [], "GitHub Trending 暂时没有返回可展示的仓库。")
+    return buildResult("empty", [], "今天的 GitHub Trending 榜单还在同步中，稍后刷新即可。")
   }
 
   return buildResult("success", repositories, null)
@@ -181,8 +181,7 @@ export async function getGitHubTrending() {
     return buildResult(
       "error",
       [],
-      error instanceof Error ? error.message : "GitHub Trending 加载失败，请稍后重试。"
+      "GitHub Trending 当前不可用，请稍后刷新。"
     )
   }
 }
-

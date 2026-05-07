@@ -153,7 +153,7 @@ function ProductHuntEmptyState({ result }: { result: ProductHuntTodayResult }) {
         暂时无法展示今日热榜
       </h2>
       <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted-foreground">
-        {result.message ?? "Product Hunt 暂时没有返回可展示的数据。"}
+        {result.message ?? "Product Hunt 今日热榜当前不可用，请稍后刷新。"}
       </p>
       <div className="mt-5">
         <Button asChild variant="outline">

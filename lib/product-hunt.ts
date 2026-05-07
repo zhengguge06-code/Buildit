@@ -371,7 +371,7 @@ async function loadProductHuntTodayPosts(): Promise<ProductHuntTodayResult> {
         [],
         windowStart,
         windowEnd,
-        "Product Hunt API 未配置。请设置 PRODUCT_HUNT_ACCESS_TOKEN，或设置 PRODUCT_HUNT_CLIENT_ID 与 PRODUCT_HUNT_CLIENT_SECRET。"
+        "Product Hunt 今日热榜当前不可用，请稍后刷新。"
       )
     }
 
@@ -405,7 +405,7 @@ async function loadProductHuntTodayPosts(): Promise<ProductHuntTodayResult> {
         [],
         windowStart,
         windowEnd,
-        "Product Hunt 今天暂时没有返回 featured 产品。"
+        "Product Hunt 今天的热榜还在同步中，稍后刷新即可。"
       )
     }
 
@@ -430,7 +430,7 @@ export async function getProductHuntTodayPosts() {
       [],
       start.toISOString(),
       end.toISOString(),
-      "Product Hunt API 未配置。请设置 PRODUCT_HUNT_ACCESS_TOKEN，或设置 PRODUCT_HUNT_CLIENT_ID 与 PRODUCT_HUNT_CLIENT_SECRET。"
+      "Product Hunt 今日热榜当前不可用，请稍后刷新。"
     )
   }
 
@@ -446,7 +446,7 @@ export async function getProductHuntTodayPosts() {
       [],
       start.toISOString(),
       end.toISOString(),
-      error instanceof Error ? error.message : "Product Hunt 今日热榜加载失败，请稍后重试。"
+      "Product Hunt 今日热榜当前不可用，请稍后刷新。"
     )
   }
 }

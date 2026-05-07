@@ -27,6 +27,8 @@ import { createClient } from "@/lib/supabase/client"
 import { invalidateUserSubmissionsCache } from "@/lib/user-center-cache"
 import { hasSupabaseEnv } from "@/lib/utils"
 
+const SHORT_DESCRIPTION_MAX_LENGTH = 50
+
 const formSchema = z.object({
   channelType: z.enum(["vibe-tools", "vibe-products"], {
     message: "请选择投稿频道。",
@@ -53,8 +55,8 @@ const formSchema = z.object({
     .min(10, {
       message: "简介至少需要 10 个字符。",
     })
-    .max(200, {
-      message: "简介不能超过 200 个字符。",
+    .max(SHORT_DESCRIPTION_MAX_LENGTH, {
+      message: `简介不能超过 ${SHORT_DESCRIPTION_MAX_LENGTH} 个字符。`,
     }),
   fullDescription: z.string().min(50, {
     message: "详细介绍至少需要 50 个字符。",
@@ -463,10 +465,15 @@ export default function SubmitPage() {
                           ? "简要描述这个产品是什么类型、适合参考哪里，或它为什么值得被收录。"
                           : "简要描述这个条目的主要能力、用途，或它为什么值得参考。"
                       }
+                      maxLength={SHORT_DESCRIPTION_MAX_LENGTH}
                       className="resize-none"
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription>
+                    建议控制在 {SHORT_DESCRIPTION_MAX_LENGTH} 字以内，列表卡片可以完整展示。当前{" "}
+                    {field.value.length}/{SHORT_DESCRIPTION_MAX_LENGTH}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

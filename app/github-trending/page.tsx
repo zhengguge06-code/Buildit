@@ -63,6 +63,8 @@ function GitHubTrendingGrid({ repositories }: { repositories: GitHubTrendingRepo
 }
 
 function GitHubTrendingCard({ repository }: { repository: GitHubTrendingRepository }) {
+  const description = repository.description?.trim()
+
   return (
     <article className="group relative flex min-h-[14.5rem] flex-col overflow-hidden rounded-xl border border-border/70 bg-card p-4 shadow-warm-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-warm">
       <a
@@ -90,9 +92,11 @@ function GitHubTrendingCard({ repository }: { repository: GitHubTrendingReposito
         <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-300 group-hover:text-primary" />
       </div>
 
-      <p className="pointer-events-none relative z-10 mt-3 line-clamp-3 min-h-[3.75rem] text-sm leading-5 text-muted-foreground">
-        {repository.description ?? "GitHub Trending 暂时没有返回该仓库的描述。"}
-      </p>
+      {description ? (
+        <p className="pointer-events-none relative z-10 mt-3 line-clamp-3 min-h-[3.75rem] text-sm leading-5 text-muted-foreground">
+          {description}
+        </p>
+      ) : null}
 
       <div className="pointer-events-none relative z-10 mt-3 flex flex-wrap gap-1.5">
         {repository.language ? (
@@ -142,7 +146,7 @@ function GitHubTrendingEmptyState({ result }: { result: GitHubTrendingResult }) 
         暂时无法展示 GitHub Trending
       </h2>
       <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted-foreground">
-        {result.message ?? "GitHub Trending 暂时没有返回可展示的数据。"}
+        {result.message ?? "GitHub Trending 当前不可用，请稍后刷新。"}
       </p>
       <div className="mt-5">
         <Button asChild variant="outline">
@@ -155,4 +159,3 @@ function GitHubTrendingEmptyState({ result }: { result: GitHubTrendingResult }) 
     </div>
   )
 }
-

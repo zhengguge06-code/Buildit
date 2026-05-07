@@ -98,7 +98,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
           </motion.div>
         </div>
 
-        <p className="line-clamp-2 min-h-12 max-h-12 overflow-hidden break-words text-sm leading-6 text-muted-foreground">
+        <p className="line-clamp-3 min-h-[3.75rem] max-h-[3.75rem] overflow-hidden break-words text-xs leading-5 text-muted-foreground">
           {tool.description}
         </p>
 
