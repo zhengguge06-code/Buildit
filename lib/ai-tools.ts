@@ -636,7 +636,6 @@ async function fetchNewSchemaChannelPageData(
         category_id,
         channel_type,
         status,
-        sort_score,
         published_at,
         created_at,
         user_id,
@@ -647,7 +646,6 @@ async function fetchNewSchemaChannelPageData(
     )
     .eq("channel_type", channelType)
     .eq("status", "published")
-    .order("sort_score", { ascending: false })
     .order("published_at", { ascending: false })
 
   if (toolError || !toolData) {
@@ -772,7 +770,6 @@ async function fetchNewSchemaToolDetail(supabase: SupabasePublicClient, slug: st
         category_id,
         channel_type,
         status,
-        sort_score,
         published_at,
         created_at,
         user_id,
@@ -967,12 +964,10 @@ async function fetchAllSearchableToolsFromNewSchema(supabase: SupabasePublicClie
         category_id,
         channel_type,
         status,
-        sort_score,
         published_at
       `
     )
     .eq("status", "published")
-    .order("sort_score", { ascending: false })
     .order("published_at", { ascending: false })
 
   if (error || !data) {

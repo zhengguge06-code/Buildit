@@ -1,0 +1,35 @@
+   ▲ Next.js 15.2.9
+   - Local:        http://localhost:3001
+   - Network:      http://198.18.0.1:3001
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 2.5s
+ ○ Compiling / ...
+ ✓ Compiled / in 11.5s (1927 modules)
+ ✓ Compiled in 678ms (882 modules)
+ GET / 200 in 12180ms
+ ○ Compiling /vibe-tools ...
+ ✓ Compiled /vibe-tools in 1146ms (1958 modules)
+ GET /vibe-tools 200 in 1461ms
+ ✓ Compiled /vibe-products in 228ms (1960 modules)
+ GET /vibe-products 200 in 544ms
+ ○ Compiling /tool/[slug] ...
+ ✓ Compiled /tool/[slug] in 2.6s (2266 modules)
+ GET /tool/cursor 200 in 3950ms
+ ✓ Compiled /api/search-tools in 343ms (2282 modules)
+ GET /api/search-tools 200 in 471ms
+ GET / 200 in 240ms
+ GET /vibe-tools 200 in 106ms
+ GET /vibe-products 200 in 110ms
+ GET /tool/cursor 200 in 191ms
+ GET /api/search-tools 200 in 5ms
+ ✓ Compiled in 1313ms (2296 modules)
+ ✓ Compiled in 194ms (913 modules)
+ GET /vibe-tools 200 in 192ms
+ GET /vibe-products 200 in 30ms
+ GET /tool/cursor 200 in 82ms
+ GET /tool/typefully 200 in 15ms
+ GET /api/search-tools 200 in 23ms
+ ✓ Compiled in 247ms (913 modules)
+ ✓ Compiled in 266ms (913 modules)

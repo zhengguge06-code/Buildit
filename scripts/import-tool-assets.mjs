@@ -142,7 +142,10 @@ async function main() {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
+  const results = []
+
   for (const tool of tools) {
+    try {
     const slug = tool.slug
 
     if (!slug) {
@@ -172,6 +175,7 @@ async function main() {
     }
 
     if (Object.keys(patch).length === 0) {
+      results.push({ slug, status: "skipped", reason: "missing logoSource / previewSource" })
       console.log(`[skip] ${slug} 没有提供 logoSource / previewSource`)
       continue
     }
@@ -182,8 +186,29 @@ async function main() {
       throw updateError
     }
 
+    results.push({ slug, status: "updated", patch })
     console.log(`[done] ${slug}`, patch)
+    } catch (error) {
+      const slug = tool.slug ?? "(missing-slug)"
+      const message = error instanceof Error ? error.message : String(error)
+      results.push({ slug, status: "error", error: message })
+      console.log(`[error] ${slug} ${message}`)
+    }
   }
+
+  console.log(
+    JSON.stringify(
+      {
+        totalCount: results.length,
+        updatedCount: results.filter((item) => item.status === "updated").length,
+        skippedCount: results.filter((item) => item.status === "skipped").length,
+        errorCount: results.filter((item) => item.status === "error").length,
+        errors: results.filter((item) => item.status === "error"),
+      },
+      null,
+      2
+    )
+  )
 }
 
 main().catch((error) => {

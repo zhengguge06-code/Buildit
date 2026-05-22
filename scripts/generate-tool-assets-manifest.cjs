@@ -116,7 +116,8 @@ async function main() {
   const outputPath = outputArg
     ? path.resolve(process.cwd(), outputArg.slice("--output=".length))
     : path.join(process.cwd(), "scripts", "tool-assets.generated.json")
-  const onlyMissing = !process.argv.includes("--all")
+  const forceAll = process.argv.includes("--all")
+  const onlyMissing = !forceAll
 
   const supabase = createClient(supabaseUrl, supabaseKey)
   const { data: tools, error } = await supabase
@@ -153,8 +154,8 @@ async function main() {
         websiteUrl: tool.website_url,
         currentLogoUrl: tool.logo_url,
         currentPreviewImageUrl: tool.preview_image_url,
-        logoSource: needsLogo ? assetCandidates.logoSource : null,
-        previewSource: needsPreview ? assetCandidates.previewSource : null,
+        logoSource: forceAll || needsLogo ? assetCandidates.logoSource : null,
+        previewSource: forceAll || needsPreview ? assetCandidates.previewSource : null,
       })
       console.log(`[scan] ${tool.slug}`)
     } catch (fetchError) {
